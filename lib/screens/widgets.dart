@@ -23,6 +23,7 @@ Text label() {
     textAlign: TextAlign.center,
   );
 }
+// style: GoogleFonts.lato(),
 
 Widget textbox() {
   return Container(
@@ -89,3 +90,47 @@ Widget button() {
 
 
 // signup color 294E3B
+
+// import 'package:flutter/material.dart';
+
+// class MyButton extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 324,
+//       height: 51,
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(45),
+//         color: Color(0xff149a57),
+//       ),
+//       child: ElevatedButton(
+//         onPressed: () {},
+//         child: Text('Button'),
+//         style: ElevatedButton.styleFrom(
+//           primary: Colors.transparent,
+//           elevation: 0,
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(45),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
+// Container(
+//   width: 324,
+//   height: 51,
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(45),
+//     color: Color(0xfff2f2f2),
+//   ),
+//   child: TextField(
+//     decoration: InputDecoration(
+//       border: InputBorder.none,
+//       contentPadding: EdgeInsets.symmetric(horizontal: 16),
+//     ),
+//   ),
+// ),
