@@ -1,0 +1,15 @@
+<svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="27" height="27" fill="#1E1E1E"/>
+<g id="Frame 1" clip-path="url(#clip0_0_1)">
+<rect width="393" height="809" transform="translate(-301 -308)" fill="white"/>
+<path id="Rectangle 14" d="M-21 3C-21 -6.38884 -13.3888 -14 -4 -14H29C38.3888 -14 46 -6.38884 46 3V27C46 36.3888 38.3888 44 29 44H-4C-13.3888 44 -21 36.3888 -21 27V3Z" fill="#D9D9D9" fill-opacity="0.5"/>
+<g id="subway:missing">
+<path id="Vector" d="M26.3409 20.3239L16.2897 3.0164C14.6127 0.226751 12.3821 0.226751 10.7051 3.0164L0.6592 20.3239C-1.01776 23.1135 0.6592 25.3494 4.00784 25.3494H22.9922C26.3409 25.3494 28.0178 23.1135 26.3409 20.3239ZM15.736 23.1135H11.2694V18.6469H15.736V23.1135ZM15.736 16.4162H11.2694V6.36504H15.736V16.4162Z" fill="#FF0000"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_1">
+<rect width="393" height="809" fill="white" transform="translate(-301 -308)"/>
+</clipPath>
+</defs>
+</svg>
