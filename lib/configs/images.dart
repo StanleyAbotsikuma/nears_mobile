@@ -10,3 +10,22 @@
 // ▪ setup_bg_opaque.png bg_opaque
 //   tip_icon.svg tip
 //   verify_icon.svg verify
+
+// assets/images/alert_icon.svg
+// assets/images/close_icon.svg
+// assets/images/follow_icon.svg
+// assets/images/gh_flag.png
+// assets/images/history_icon.svg
+// assets/images/home_icon.svg
+// assets/images/missing_icon.svg
+// assets/images/settings_icon.svg
+// assets/images/setup_bg.png
+// assets/images/setup_bg_opaque.png
+// assets/images/tip_icon.svg
+// assets/images/verify_icon.svg
+
+import 'package:flutter/material.dart';
+
+class AppAssert {
+  // static const AssetImage =  ;
+}
