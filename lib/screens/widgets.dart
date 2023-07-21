@@ -11,19 +11,90 @@
 // page text
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-Text label() {
+Text title(String title) {
   return Text(
-    "NATIONAL ID",
-    style: TextStyle(
-        fontFamily: "Jura",
-        fontSize: 17,
-        fontWeight: FontWeight.w700,
-        color: Color(0xff9b0505)),
+    title,
     textAlign: TextAlign.center,
+    style: GoogleFonts.jura(
+      textStyle: TextStyle(
+        color: Colors.black,
+        letterSpacing: .5,
+        fontSize: 24.sp,
+        shadows: const [
+          Shadow(
+            offset: Offset(0.0, 0.0),
+            blurRadius: 4.0,
+            color: Color.fromARGB(115, 0, 0, 0),
+          )
+        ],
+      ),
+    ),
   );
 }
-// style: GoogleFonts.lato(),
+
+Text label(String name) {
+  return Text(
+    name,
+    style: GoogleFonts.jura(
+      textStyle: TextStyle(
+        color: const Color(0xff9b0505),
+        letterSpacing: .5,
+        fontSize: 17.sp,
+        shadows: const [
+          Shadow(
+            offset: Offset(0.0, 0.0),
+            blurRadius: 5.0,
+            color: Colors.white,
+          )
+        ],
+      ),
+    ),
+    textAlign: TextAlign.left,
+  );
+}
+
+Container textField() {
+  return Container(
+    width: double.infinity,
+    height: 51.h,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(45),
+      color: Color(0xfff2f2f2),
+    ),
+    child: TextField(
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      ),
+    ),
+  );
+}
+
+Container button(String name) {
+  return Container(
+    width: double.infinity,
+    height: 51.h,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(45),
+      color: const Color(0xff149a57),
+    ),
+    child: MaterialButton(
+      onPressed: () {},
+      child: Text(
+        name,
+        style: GoogleFonts.jura(),
+      ),
+      textColor: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(45),
+      ),
+    ),
+  );
+}
 
 Widget textbox() {
   return Container(
@@ -33,13 +104,7 @@ Widget textbox() {
           borderRadius: BorderRadius.circular(45), color: Color(0xfff2f2f2)));
 }
 
-Widget button() {
-  return Container(
-      width: 324,
-      height: 51,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(45), color: Color(0xff149a57)));
-}
+
 
 
 // Stack(children: [    Stack(children: [    Image.asset(
@@ -119,18 +184,3 @@ Widget button() {
 // }
 
 
-
-// Container(
-//   width: 324,
-//   height: 51,
-//   decoration: BoxDecoration(
-//     borderRadius: BorderRadius.circular(45),
-//     color: Color(0xfff2f2f2),
-//   ),
-//   child: TextField(
-//     decoration: InputDecoration(
-//       border: InputBorder.none,
-//       contentPadding: EdgeInsets.symmetric(horizontal: 16),
-//     ),
-//   ),
-// ),

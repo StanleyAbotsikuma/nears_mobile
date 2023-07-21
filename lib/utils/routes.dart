@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../tests/login.dart';
+import 'package:nears/screens/signin.dart';
 
 class GenerateRoute {
   //onGenerateRoute init
@@ -10,10 +9,10 @@ class GenerateRoute {
 
     switch (pagePath) {
       case "/":
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(builder: (_) => const SigninScreen());
 
       default:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(builder: (_) => const SigninScreen());
     }
   }
 }
