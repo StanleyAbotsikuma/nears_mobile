@@ -23,6 +23,7 @@ Text title(String title) {
         color: Colors.black,
         letterSpacing: .5,
         fontSize: 24.sp,
+        fontWeight: FontWeight.w700,
         shadows: const [
           Shadow(
             offset: Offset(0.0, 0.0),
@@ -42,6 +43,7 @@ Text label(String name) {
       textStyle: TextStyle(
         color: const Color(0xff9b0505),
         letterSpacing: .5,
+        fontWeight: FontWeight.w700,
         fontSize: 17.sp,
         shadows: const [
           Shadow(
@@ -85,7 +87,7 @@ Container button(String name) {
       onPressed: () {},
       child: Text(
         name,
-        style: GoogleFonts.jura(),
+        style: GoogleFonts.jura(fontWeight: FontWeight.w700),
       ),
       textColor: Colors.white,
       padding: EdgeInsets.symmetric(vertical: 12),
