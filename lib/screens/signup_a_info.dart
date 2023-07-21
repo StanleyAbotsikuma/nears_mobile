@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
-
 import '../configs/images.dart';
 
 class SignupScreenTwo extends StatefulWidget {
@@ -13,6 +13,11 @@ class SignupScreenTwo extends StatefulWidget {
 }
 
 class _SignupScreenTwoState extends State<SignupScreenTwo> {
+  TextEditingController placeOfResidenceController = TextEditingController();
+  TextEditingController ghanaPostGpsController = TextEditingController();
+  TextEditingController occupationController = TextEditingController();
+  TextEditingController dateOfBirthController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,21 +69,49 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
                           Gap(30.h),
                           label("PLACE OF BIRTH"),
                           Gap(10.h),
-                          textField(),
+                          textField(dateOfBirthController),
                           Gap(10.h),
                           label("PLACE OF RESIDENCE"),
                           Gap(10.h),
-                          textField(),
+                          textField(placeOfResidenceController),
                           Gap(10.h),
                           label("GHANA POST GPS"),
                           Gap(10.h),
-                          textField(),
+                          textField(ghanaPostGpsController),
                           Gap(10.h),
                           label("OCCUPATION"),
                           Gap(10.h),
-                          textField(),
+                          textField(occupationController),
                           Gap(35.h),
-                          button("CONTINUE"),
+                          button("CONTINUE", () {
+                            Navigator.pushNamed(context, "/signup_3");
+                          }),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Center(
+                              child: Text(
+                                "BACK",
+                                style: GoogleFonts.jura(
+                                  textStyle: TextStyle(
+                                    letterSpacing: .5,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xff149A57),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 5.0,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     )

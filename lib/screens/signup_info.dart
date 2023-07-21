@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
 
 import '../configs/images.dart';
@@ -13,6 +15,24 @@ class SignupScreenOne extends StatefulWidget {
 }
 
 class _SignupScreenOneState extends State<SignupScreenOne> {
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController dateOfBirthController = TextEditingController();
+  TextEditingController occupationController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController ghanaCardNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      // dateOfBirthController.text = "Hellow";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,25 +84,54 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
                           Gap(25.h),
                           label("FIRST NAME"),
                           Gap(10.h),
-                          textField(),
+                          textField(firstNameController),
                           Gap(10.h),
                           label("LAST NAME"),
                           Gap(10.h),
-                          textField(),
+                          textField(lastNameController),
                           Gap(10.h),
                           label("DATE OF BIRTH"),
                           Gap(10.h),
-                          textField(),
+                          textField(
+                              dateOfBirthController, true, _onFocusChange),
                           Gap(10.h),
                           label("PHONE NUMBER"),
                           Gap(10.h),
-                          textField(),
+                          textField(phoneNumberController),
                           Gap(10.h),
                           label("NATIONAL ID"),
                           Gap(10.h),
-                          textField(),
+                          textField(ghanaCardNumberController),
                           Gap(35.h),
-                          button("CONTINUE"),
+                          button("CONTINUE", () {
+                            Navigator.pushNamed(context, "/signup_2");
+                          }),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Center(
+                              child: Text(
+                                "BACK",
+                                style: GoogleFonts.jura(
+                                  textStyle: TextStyle(
+                                    letterSpacing: .5,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xff149A57),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 5.0,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     )

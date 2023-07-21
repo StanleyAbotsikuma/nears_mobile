@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'NEAR MOBILE',
               initialRoute: "/",
+              
               onGenerateRoute: GenerateRoute.onGenerateRoute,
             ));
       },

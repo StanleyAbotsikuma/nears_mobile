@@ -1,18 +1,9 @@
-// input field
-
-// label
-
-// title
-
-// button
-
-// icon
-
-// page text
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nears/configs/colors.dart';
+import '../configs/images.dart';
 
 Text title(String title) {
   return Text(
@@ -41,7 +32,7 @@ Text label(String name) {
     name,
     style: GoogleFonts.jura(
       textStyle: TextStyle(
-        color: const Color(0xff9b0505),
+        color: AppColors.whine,
         letterSpacing: .5,
         fontWeight: FontWeight.w700,
         fontSize: 17.sp,
@@ -58,16 +49,21 @@ Text label(String name) {
   );
 }
 
-Container textField() {
+Container textField(TextEditingController controller,
+    [bool date = false, final onFocusChange]) {
   return Container(
     width: double.infinity,
     height: 51.h,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(45),
-      color: Color(0xfff2f2f2),
+      color: AppColors.ashLight,
     ),
     child: TextField(
-      decoration: InputDecoration(
+      style: TextStyle(fontSize: 16.sp),
+      controller: controller,
+      readOnly: date,
+      onTap: date ? onFocusChange : null,
+      decoration: const InputDecoration(
         border: InputBorder.none,
         contentPadding: EdgeInsets.symmetric(horizontal: 16),
       ),
@@ -75,37 +71,81 @@ Container textField() {
   );
 }
 
-Container button(String name) {
+Container button(String name, final callback) {
   return Container(
     width: double.infinity,
     height: 51.h,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(45),
-      color: const Color(0xff149a57),
+      color: AppColors.green,
     ),
     child: MaterialButton(
-      onPressed: () {},
+      onPressed: callback,
+      textColor: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(45),
+      ),
       child: Text(
         name,
         style: GoogleFonts.jura(fontWeight: FontWeight.w700),
-      ),
-      textColor: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(45),
       ),
     ),
   );
 }
 
-Widget textbox() {
-  return Container(
-      width: 324,
-      height: 51,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(45), color: Color(0xfff2f2f2)));
+// ignore: must_be_immutable
+class VerifyButton extends StatefulWidget {
+  String name;
+  // ignore: prefer_typing_uninitialized_variables
+  final callback;
+  VerifyButton(this.name, this.callback, {super.key});
+
+  @override
+  State<VerifyButton> createState() => _VerifyButtonState();
 }
 
+class _VerifyButtonState extends State<VerifyButton> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: widget.callback,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 230.w,
+            height: 50.h,
+            decoration: BoxDecoration(
+              color: AppColors.ashLight,
+              borderRadius: BorderRadius.circular(25.h),
+            ),
+            child: Center(
+              child: Text(widget.name,
+                  softWrap: true,
+                  style: GoogleFonts.jura(
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(187, 19, 19, 19))),
+            ),
+          ),
+          Container(
+            width: 67.w,
+            height: 50.h,
+            decoration: BoxDecoration(
+              color: const Color(0xffD9D9D9),
+              borderRadius: BorderRadius.circular(25.h),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                AppAssets.missingIcon,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
 
 
@@ -152,37 +192,3 @@ Widget textbox() {
 //                 fontWeight: FontWeith.w700,
 //             )
 //         )
-
-
-
-
-// signup color 294E3B
-
-// import 'package:flutter/material.dart';
-
-// class MyButton extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 324,
-//       height: 51,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(45),
-//         color: Color(0xff149a57),
-//       ),
-//       child: ElevatedButton(
-//         onPressed: () {},
-//         child: Text('Button'),
-//         style: ElevatedButton.styleFrom(
-//           primary: Colors.transparent,
-//           elevation: 0,
-//           shape: RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(45),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-

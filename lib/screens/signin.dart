@@ -1,14 +1,3 @@
-// TextEditingController userIdController = TextEditingController();
-// TextEditingController firstNameController = TextEditingController();
-// TextEditingController lastNameController = TextEditingController();
-// TextEditingController dateOfBirthController = TextEditingController();
-// TextEditingController occupationController = TextEditingController();
-// TextEditingController phoneNumberController = TextEditingController();
-// TextEditingController accountIdController = TextEditingController();
-// TextEditingController placeOfResidenceController = TextEditingController();
-// TextEditingController ghanaPostGpsController = TextEditingController();
-// TextEditingController ghanaCardNumberController = TextEditingController();
-
 // String userId = userIdController.text;
 // String firstName = firstNameController.text;
 // String lastName = lastNameController.text;
@@ -41,6 +30,8 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,59 +84,64 @@ class _SigninScreenState extends State<SigninScreen> {
                           Gap(15.h),
                           label("PHONE"),
                           Gap(10.h),
-                          textField(),
+                          textField(phoneNumberController),
                           Gap(10.h),
                           label("PASSWORD"),
                           Gap(10.h),
-                          textField(),
+                          textField(passwordController),
                           Gap(20.h),
-                          button("SIGN IN"),
+                          button("SIGN IN", () {
+                            Navigator.pushNamed(context, "/home");
+                          }),
                           TextButton(
-                              onPressed: () {},
-                              child: Center(
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      "Do have an account?",
-                                      style: GoogleFonts.jura(
-                                        textStyle: TextStyle(
-                                          letterSpacing: .5,
-                                          fontSize: 17.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: const Color(0xff149A57),
-                                          shadows: const [
-                                            Shadow(
-                                              offset: Offset(0.0, 0.0),
-                                              blurRadius: 5.0,
-                                              color: Colors.white,
-                                            )
-                                          ],
-                                        ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/signup_1");
+                            },
+                            child: Center(
+                              child: Wrap(
+                                children: [
+                                  Text(
+                                    "Do have an account?",
+                                    style: GoogleFonts.jura(
+                                      textStyle: TextStyle(
+                                        letterSpacing: .5,
+                                        fontSize: 17.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xff149A57),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 5.0,
+                                            color: Colors.white,
+                                          )
+                                        ],
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
-                                    Text(
-                                      " Sign-Up",
-                                      style: GoogleFonts.jura(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: .5,
-                                          fontSize: 17.sp,
-                                          color: const Color(0xff294E3B),
-                                          shadows: const [
-                                            Shadow(
-                                              offset: Offset(0.0, 0.0),
-                                              blurRadius: 5.0,
-                                              color: Colors.white,
-                                            )
-                                          ],
-                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    " Sign-Up",
+                                    style: GoogleFonts.jura(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: .5,
+                                        fontSize: 17.sp,
+                                        color: const Color(0xff294E3B),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 5.0,
+                                            color: Colors.white,
+                                          )
+                                        ],
                                       ),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                ),
-                              ))
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     )
