@@ -26,15 +26,17 @@ class MyApp extends StatelessWidget {
             providers: [
               Provider<AppProvider>(create: (context) => AppProvider()),
             ],
-            child: const MaterialApp(
+            child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'NEAR MOBILE',
               initialRoute: "/",
-              
               onGenerateRoute: GenerateRoute.onGenerateRoute,
+              theme: ThemeData(
+                primarySwatch: Colors
+                    .green, // Change this color to your desired primary color
+              ),
             ));
       },
-      // child: const SuccessPage(),
     );
   }
 }

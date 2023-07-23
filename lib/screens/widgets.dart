@@ -36,7 +36,7 @@ Text label(String name) {
         letterSpacing: .5,
         fontWeight: FontWeight.w700,
         fontSize: 17.sp,
-        shadows: const [
+        shadows:  const [
           Shadow(
             offset: Offset(0.0, 0.0),
             blurRadius: 5.0,
