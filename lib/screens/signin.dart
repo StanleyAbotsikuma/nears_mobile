@@ -14,12 +14,14 @@
 
 // String ghanaCardPicturePath = ghanaCardPicture?.path;
 // String photoPath = photo?.path;
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../configs/images.dart';
+import '../utils/functions.dart';
 import 'widgets.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -32,6 +34,7 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,8 +93,30 @@ class _SigninScreenState extends State<SigninScreen> {
                           Gap(10.h),
                           textField(passwordController),
                           Gap(20.h),
-                          button("SIGN IN", () {
-                            Navigator.pushNamed(context, "/home");
+                          button("SIGN IN", () async {
+                            if (phoneNumberController.text.isNotEmpty &&
+                                passwordController.text.isNotEmpty) {
+                              final Map<String, dynamic> loginData = {
+                                'phone_number':
+                                    phoneNumberController.text.trim(),
+                                'password': passwordController.text.trim()
+                              };
+
+                              final tokens = await login(loginData);
+                              final data = await fetchData();
+                              print(data);
+                            } else {
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                title: 'Oops...',
+                                text: 'Enter Username and Password',
+                                loopAnimation: false,
+                              );
+                            }
+
+                            // print(tokens);
+                            // Navigator.pushNamed(context, "/home");
                           }),
                           TextButton(
                             onPressed: () {

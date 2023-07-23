@@ -3,37 +3,66 @@ import 'package:dio/dio.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// Define the request headers
+import '../configs/connections.dart';
+
 final Map<String, dynamic> headers = {'Content-Type': 'application/json'};
+final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-// Define the request body for the login request
-final Map<String, dynamic> loginData = {
-  'username': "username",
-  'password': "password"
-};
+final Dio dio = Dio(BaseOptions(
+    baseUrl: AppConnections.protocolType + AppConnections.host,
+    headers: headers));
 
-final Dio dio =
-    Dio(BaseOptions(baseUrl: 'https://example.com/api/', headers: headers));
-
-Future<Map<String, dynamic>> fetchTokens() async {
+Future<Object> login(loginData) async {
   try {
     Response response = await dio.post(
-      'token/',
+      'api/login/',
       data: json.encode(loginData),
     );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> tokens = response.data;
-      return tokens;
+      final String accessToken = tokens['access'];
+      final String refreshToken = tokens['refresh'];
+      await secureStorage.write(key: "accessToken", value: accessToken);
+      await secureStorage.write(key: "refreshToken", value: refreshToken);
+
+      final Map<String, dynamic> gResult = {'result': "success"};
+      return gResult;
     } else {
-      throw Exception('Failed to retrieve tokens');
+      final Map<String, dynamic> gResult = {'result': "error"};
+      return gResult;
     }
   } catch (e) {
-    throw Exception('Failed to retrieve tokens: $e');
+    final Map<String, dynamic> gResult = {'result': "error"};
+
+    return gResult;
   }
 }
 
-Future<List<dynamic>> fetchData(String accessToken) async {
+Future<Object> fetchData() async {
+  final accessToken = await secureStorage.read(key: "accessToken");
+  // print(accessToken);
+
+  try {
+    Response response = await dio.get(
+      'api/staff/',
+      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      return data;
+    } else {
+      final Map<String, dynamic> gResult = {'result': "error"};
+      return gResult;
+    }
+  } catch (e) {
+    final Map<String, dynamic> gResult = {'result': "error"};
+    return gResult;
+  }
+}
+
+Future<List<dynamic>> getUserLoad(String accessToken) async {
   try {
     Response response = await dio.get(
       'data/',
@@ -76,31 +105,36 @@ Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
   }
 }
 
-// Define the main function
-void main() async {
-  // Retrieve the JWT tokens
-  final Map<String, dynamic> tokens = await fetchTokens();
+//Alert Alert Alert Alert Alert Alert Alert Alert
+////Alert Alert Alert Alert Alert Alert Alert Alert
+/////Alert Alert Alert Alert Alert Alert Alert Alert
+/////Alert Alert Alert Alert Alert Alert Alert Alert
 
-  // Store the tokens in local storage or a cookie
-  final String accessToken = tokens['access'];
-  final String refreshToken = tokens['refresh'];
-  // ...
 
-  // Make an API request with the access token
-  final List<dynamic> data = await fetchData(accessToken);
-  print(data);
+// final Map<String, dynamic> tokens = await fetchTokens();
 
-  // Check if the access token is expired and refresh it if necessary
-  if (isTokenExpired(accessToken)) {
-    // Retrieve a new access token using the refresh token
-    final Map<String, dynamic> newTokens = await refreshTokens(refreshToken);
-    final String newAccessToken = newTokens['access'];
+// final String accessToken = tokens['access'];
+// final String refreshToken = tokens['refresh'];
+// // ...
 
-    // Store the new access token in local storage or a cookie
-    // ...
+// final List<dynamic> data = await fetchData(accessToken);
+// print(data);
 
-    // Make another API request with the new access token
-    final List<dynamic> newData = await fetchData(newAccessToken);
-    print(newData);
+// if (isTokenExpired(accessToken)) {
+//   final Map<String, dynamic> newTokens = await refreshTokens(refreshToken);
+//   final String newAccessToken = newTokens['access'];
+
+//   final List<dynamic> newData = await fetchData(newAccessToken);
+//   print(newData);
+// }
+
+
+
+bool hasEmptyFields(List<String> fields) {
+  for (String field in fields) {
+    if (field == null || field.isEmpty) {
+      return true;
+    }
   }
+  return false;
 }

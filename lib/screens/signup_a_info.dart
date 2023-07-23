@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
 import '../configs/images.dart';
+import '../utils/functions.dart';
 
 class SignupScreenTwo extends StatefulWidget {
   const SignupScreenTwo({super.key});
@@ -84,6 +85,18 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
                           textField(occupationController),
                           Gap(35.h),
                           button("CONTINUE", () {
+                            // List<String> fields = [
+                            //   dateOfBirthController.text,
+                            //   occupationController.text,
+                            //   placeOfResidenceController.text,
+                            //   ghanaPostGpsController.text,
+                            // ];
+
+                            // if (hasEmptyFields(fields)) {
+                            //   // Handle the case where one or more fields are empty or null
+                            // } else {
+                            //   // All fields are non-empty and non-null
+                            // }
                             Navigator.pushNamed(context, "/signup_3");
                           }),
                           TextButton(
