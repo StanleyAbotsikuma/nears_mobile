@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
+import 'package:provider/provider.dart';
 import '../configs/images.dart';
+import '../utils/app_provider.dart';
 import '../utils/functions.dart';
 
 class SignupScreenTwo extends StatefulWidget {
@@ -17,7 +19,12 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
   TextEditingController placeOfResidenceController = TextEditingController();
   TextEditingController ghanaPostGpsController = TextEditingController();
   TextEditingController occupationController = TextEditingController();
-  TextEditingController dateOfBirthController = TextEditingController();
+  TextEditingController emailAddressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +75,9 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
                             child: title("ADDITIONAL\n INFORMATION"),
                           ),
                           Gap(30.h),
-                          label("PLACE OF BIRTH"),
+                          label("EMail Address"),
                           Gap(10.h),
-                          textField(dateOfBirthController),
+                          textField(emailAddressController),
                           Gap(10.h),
                           label("PLACE OF RESIDENCE"),
                           Gap(10.h),
@@ -83,20 +90,25 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
                           label("OCCUPATION"),
                           Gap(10.h),
                           textField(occupationController),
-                          Gap(35.h),
+                          Gap(65.h),
                           button("CONTINUE", () {
-                            // List<String> fields = [
-                            //   dateOfBirthController.text,
-                            //   occupationController.text,
-                            //   placeOfResidenceController.text,
-                            //   ghanaPostGpsController.text,
-                            // ];
+                            List<String> fields = [
+                              occupationController.text,
+                              placeOfResidenceController.text,
+                              ghanaPostGpsController.text,
+                              emailAddressController.text
+                            ];
 
-                            // if (hasEmptyFields(fields)) {
-                            //   // Handle the case where one or more fields are empty or null
-                            // } else {
-                            //   // All fields are non-empty and non-null
-                            // }
+                            if (hasEmptyFields(fields)) {
+                            } else {}
+                            Provider.of<AppProvider>(context, listen: false)
+                                .setSignupAInfo(
+                                    ghanaPostGps: ghanaPostGpsController.text,
+                                    placeOfResidence:
+                                        placeOfResidenceController.text,
+                                    occupation: occupationController.text,
+                                    emailAddress: emailAddressController.text);
+
                             Navigator.pushNamed(context, "/signup_3");
                           }),
                           TextButton(

@@ -1,9 +1,12 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
-
+import 'package:nears/utils/app_provider.dart';
+import 'package:provider/provider.dart';
+import 'dart:core';
 import '../configs/images.dart';
 import '../utils/functions.dart';
 
@@ -18,7 +21,6 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
-  TextEditingController occupationController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController ghanaCardNumberController = TextEditingController();
 
@@ -27,10 +29,23 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
     super.initState();
   }
 
-  void _onFocusChange() {
-    setState(() {
-      // dateOfBirthController.text = "Hellow";
-    });
+  void _onFocusChange() async {
+    var results = await showCalendarDatePicker2Dialog(
+      context: context,
+      config: CalendarDatePicker2WithActionButtonsConfig(
+          calendarType: CalendarDatePicker2Type.single),
+      dialogSize: Size(325.w, 400.h),
+      borderRadius: BorderRadius.circular(15),
+    );
+
+    if (results != null) {
+      DateTime dateTime =
+          DateTime.parse(results[1]!.toString().replaceAll(" ", "T"));
+      final dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+      dateOfBirthController.text = dateOnly.toString();
+      print(dateOnly);
+    }
   }
 
   @override
@@ -104,20 +119,33 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
                           textField(ghanaCardNumberController),
                           Gap(35.h),
                           button("CONTINUE", () {
-                            // List<String> fields = [
-                            //   firstNameController.text,
-                            //   lastNameController.text,
-                            //   dateOfBirthController.text,
-                            //   occupationController.text,
-                            //   phoneNumberController.text,
-                            //   ghanaCardNumberController.text,
-                            // ];
+                            List<String> fields = [
+                              firstNameController.text,
+                              lastNameController.text,
+                              dateOfBirthController.text,
+                              phoneNumberController.text,
+                              ghanaCardNumberController.text,
+                            ];
 
-                            // if (hasEmptyFields(fields)) {
-                            //   // Handle the case where one or more fields are empty or null
-                            // } else {
-                              
-                            // }
+                            if (hasEmptyFields(fields)) {
+                            } else {
+                              // Provider.of<AppProvider>(context, listen: false)
+                              //     .setSignupInfo(
+                              //         firstName: firstNameController.text,
+                              //         lastName: lastNameController.text,
+                              //         dateOfBirth: dateOfBirthController.text,
+                              //         ghanaCardNumber:
+                              //             ghanaCardNumberController.text,
+                              //         phoneNumber: phoneNumberController.text);
+                            }
+                            Provider.of<AppProvider>(context, listen: false)
+                                .setSignupInfo(
+                                    firstName: firstNameController.text,
+                                    lastName: lastNameController.text,
+                                    dateOfBirth: dateOfBirthController.text,
+                                    ghanaCardNumber:
+                                        ghanaCardNumberController.text,
+                                    phoneNumber: phoneNumberController.text);
                             Navigator.pushNamed(context, "/signup_2");
                           }),
                           TextButton(

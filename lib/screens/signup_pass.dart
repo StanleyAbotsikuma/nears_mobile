@@ -1,8 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nears/utils/app_provider.dart';
+import 'package:provider/provider.dart';
 import '../configs/images.dart';
+import '../utils/functions.dart';
 import 'widgets.dart';
 
 class SignupScreenPassword extends StatefulWidget {
@@ -71,9 +77,70 @@ class _SignupScreenPasswordState extends State<SignupScreenPassword> {
                           label("CONFIRM PASSWORD"),
                           Gap(10.h),
                           textField(confirmPasswordController),
-                          Gap(35.h),
-                          button("COMPLETE", () {
-                            Navigator.pushNamed(context, "/home");
+                          Gap(45.h),
+                          button("COMPLETE", () async {
+                            if (passwordController.text.isNotEmpty &&
+                                confirmPasswordController.text.isNotEmpty &&
+                                confirmPasswordController.text ==
+                                    passwordController.text) {
+                              final deviceInfoPlugin = DeviceInfoPlugin();
+                              final deviceInfo =
+                                  await deviceInfoPlugin.deviceInfo;
+                              final allInfo = deviceInfo.data;
+                              final deviceID = allInfo['serialNumber'];
+                              final Map<String, dynamic> createAccountData = {
+                                "email": Provider.of<AppProvider>(context,
+                                        listen: false)
+                                    .getEmailAddress(),
+                                'phone_number': Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getPhoneNumber(),
+                                "device_id": deviceID,
+                                'password': passwordController.text.trim()
+                              };
+
+                              final Future<Map<String, dynamic>> a =
+                                  createAccount(createAccountData);
+                              Map<String, dynamic> accountData = await a;
+                              dynamic results = accountData["results"];
+                              if (results == "success") {
+                                final Map<String, dynamic> createUserData = {
+                                  "first_name": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getFirstName(),
+                                  "last_name": Provider.of<AppProvider>(context,
+                                          listen: false)
+                                      .getLastName(),
+                                  "date_of_birth": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getDateOfBirth(),
+                                  "occupation": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getOccupation(),
+                                  "phone_number": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getPhoneNumber(),
+                                  "ghana_post_gps": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getGhanaPostGps(),
+                                  "place_of_residence":
+                                      Provider.of<AppProvider>(context,
+                                              listen: false)
+                                          .getPlaceOfResidence(),
+                                  "ghana_card_number": Provider.of<AppProvider>(
+                                          context,
+                                          listen: false)
+                                      .getGhanaCardNumber()
+                                };
+                                createUser(createUserData);
+                              }
+                            }
                           }),
                           TextButton(
                             onPressed: () {

@@ -18,6 +18,7 @@ class AppProvider with ChangeNotifier {
   String placeOfResidence = '';
   String ghanaPostGps = '';
   String ghanaCardNumber = '';
+  String emailAddress = '';
 
   void setAppStage({
     required String appStage,
@@ -67,4 +68,33 @@ class AppProvider with ChangeNotifier {
   String getPlaceOfResidence() => placeOfResidence;
   String getGhanaPostGps() => ghanaPostGps;
   String getGhanaCardNumber() => ghanaCardNumber;
+  String getEmailAddress() => emailAddress;
+
+  void setSignupInfo(
+      {required String firstName,
+      required String lastName,
+      required String dateOfBirth,
+      required String ghanaCardNumber,
+      required String phoneNumber}) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.dateOfBirth = dateOfBirth;
+    this.ghanaCardNumber = ghanaCardNumber;
+    this.phoneNumber = phoneNumber;
+    stage1 = true;
+    notifyListeners();
+  }
+
+  void setSignupAInfo(
+      {required String ghanaPostGps,
+      required String placeOfResidence,
+      required String occupation,
+      required String emailAddress}) {
+    this.occupation = occupation;
+    this.placeOfResidence = placeOfResidence;
+    this.ghanaPostGps = ghanaPostGps;
+    this.emailAddress = emailAddress;
+    stage2 = true;
+    notifyListeners();
+  }
 }

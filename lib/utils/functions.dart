@@ -6,13 +6,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../configs/connections.dart';
 
 final Map<String, dynamic> headers = {'Content-Type': 'application/json'};
-final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
 final Dio dio = Dio(BaseOptions(
     baseUrl: AppConnections.protocolType + AppConnections.host,
     headers: headers));
 
-Future<Object> login(loginData) async {
+//Login
+////
+///
+Future<Map<String, dynamic>> login(loginData) async {
   try {
     Response response = await dio.post(
       'api/login/',
@@ -39,6 +42,10 @@ Future<Object> login(loginData) async {
   }
 }
 
+//Fetch Data//
+////
+///
+///
 Future<Object> fetchData() async {
   final accessToken = await secureStorage.read(key: "accessToken");
   // print(accessToken);
@@ -105,11 +112,58 @@ Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
   }
 }
 
+Future<Map<String, dynamic>> createAccount(createAccountData) async {
+  try {
+    Response response = await dio.post(
+      'api/create_account/',
+      data: json.encode(createAccountData),
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> loginData = {
+        'phone_number': createAccountData["phone_number"],
+        'password': createAccountData["password"]
+      };
+      final Future<Map<String, dynamic>> re = login(loginData);
+
+      return re;
+    } else {
+      final Map<String, dynamic> gResult = {'result': "Create Account Error"};
+      return gResult;
+    }
+  } catch (e) {
+    final Map<String, dynamic> gResult = {'result': "error"};
+
+    return gResult;
+  }
+}
+
+Future<Map<String, dynamic>> createUser(createUserData) async {
+  try {
+    Response response = await dio.post(
+      'api/user_account/',
+      data: json.encode(createUserData),
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> gResult = {'result': "success"};
+
+      return gResult;
+    } else {
+      final Map<String, dynamic> gResult = {'result': "Create Account Error"};
+      return gResult;
+    }
+  } catch (e) {
+    final Map<String, dynamic> gResult = {'result': "error"};
+
+    return gResult;
+  }
+}
+
 //Alert Alert Alert Alert Alert Alert Alert Alert
 ////Alert Alert Alert Alert Alert Alert Alert Alert
 /////Alert Alert Alert Alert Alert Alert Alert Alert
 /////Alert Alert Alert Alert Alert Alert Alert Alert
-
 
 // final Map<String, dynamic> tokens = await fetchTokens();
 
@@ -128,11 +182,9 @@ Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
 //   print(newData);
 // }
 
-
-
 bool hasEmptyFields(List<String> fields) {
   for (String field in fields) {
-    if (field == null || field.isEmpty) {
+    if (field.isEmpty) {
       return true;
     }
   }
