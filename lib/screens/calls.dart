@@ -30,16 +30,58 @@ class _CallScreenState extends State<CallScreen> {
 
   // list of rtcCandidates to be sent over signalling
   List<RTCIceCandidate> rtcIceCadidates = [];
-
+  FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  WebSocketChannel? channel;
   // media status
   bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
+  Future<void> initWebSocket() async {
+    final accessToken = await secureStorage.read(key: "accessToken");
+    final wsUrl = Uri.parse(
+        "${AppConnections.wsType}${AppConnections.host}ws/test/sdfsdf/?token=${accessToken!}");
+    channel = WebSocketChannel.connect(wsUrl);
+    channel!.stream.listen(onMessageReceived, onError: onError, onDone: onDone);
+  }
+
+  void disposeWebSocket() {
+    if (channel != null) {
+      channel!.sink.close();
+      channel = null;
+    }
+  }
+
+  void onMessageReceived(dynamic message) {
+    try {
+      final data = jsonDecode(message.toString());
+      switch (data['message_type']) {
+        case "offers":
+          // handleOffer(data['data'].toString(), channel);
+
+          break;
+        case "candidates":
+          handleCandidate(data['data'].toString());
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void onError(dynamic error) {
+    print('WebSocket error occurred: $error');
+  }
+
+  void onDone() {
+    print('WebSocket channel closed');
+  }
 
   @override
   void initState() {
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
     init();
-    signaller();
+    initWebSocket();
     super.initState();
   }
 
@@ -164,65 +206,35 @@ class _CallScreenState extends State<CallScreen> {
     _remoteRTCVideoRenderer.dispose();
     _localStream?.dispose();
     _rtcPeerConnection?.dispose();
+    disposeWebSocket();
     super.dispose();
-  }
-
-  Future<void> signaller() async {
-    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-
-    final accessToken = await secureStorage.read(key: "accessToken");
-
-    final wsUrl = Uri.parse(
-        "${AppConnections.wsType}${AppConnections.host}ws/test/sdfsdf/?token=${accessToken!}");
-    var channel = WebSocketChannel.connect(wsUrl);
-
-    channel.stream.listen((message) {
-      try {
-        final data = json.decode(message.toString());
-        switch (data['message_type']) {
-          case "offers":
-            handleOffer(data['data'], channel);
-            break;
-
-          case "candidates":
-            handleCandidate(data['data']);
-            break;
-
-          default:
-            break;
-        }
-      } catch (e) {
-        print(e);
-      }
-
-      //
-    });
   }
 
   void handleCandidate(data) {
     final ca = jsonDecode(data.toString());
-    // print(ca);
+    // print(ca["candidate"]);
     // print("sfdsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf");
     // print(ca["sdpMid"]);
-    _rtcPeerConnection!.addCandidate(
-        RTCIceCandidate(ca["candidate"], ca["sdpMid"], ca["sdpMLineIndex"]));
+    // _rtcPeerConnection!.addCandidate(
+    //     RTCIceCandidate(ca["candidate"], ca["sdpMid"], ca["sdpMLineIndex"]));
   }
 
-  Future<void> handleOffer(data, channel) async {
-    final answer = jsonDecode(data.toString());
-    // create SDP answer
-    final answerJson = json.encode({
-      'type': answer['type'],
-      'sdp': answer['sdp'],
-    });
-    final remoteDescription =
-        RTCSessionDescription(answer['sdp'], answer['type']);
-    await _rtcPeerConnection!.setRemoteDescription(remoteDescription);
+  // Future<void> handleOffer(data, channel) async {
+  //   final answer = json.decode(data.toString());
+  //   print(answer);
+  //   // create SDP answer
+  //   // final answerJson = json.encode({
+  //   //   'type': answer['type'],
+  //   //   'sdp': answer['sdp'],
+  //   // });
+  //   // final remoteDescription =
+  //   //     RTCSessionDescription(answer['sdp'], answer['type']);
+  //   // await _rtcPeerConnection!.setRemoteDescription(remoteDescription);
 
-    Future<RTCSessionDescription> answera = _rtcPeerConnection!.createAnswer();
-    answer.then((value) {
-      channel.sink
-          .add(jsonEncode({'message_type': 'answera', 'data': answera}));
-    });
-  }
+  //   // Future<RTCSessionDescription> answera = _rtcPeerConnection!.createAnswer();
+  //   // answer.then((value) {
+  //   //   channel.sink
+  //   //       .add(jsonEncode({'message_type': 'answera', 'data': answera}));
+  //   // });
+  // }
 }
