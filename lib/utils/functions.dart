@@ -52,7 +52,7 @@ Future<Object> fetchData() async {
 
   try {
     Response response = await dio.get(
-      'api/staff/',
+      'api/user_account/',
       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
     );
 
@@ -112,7 +112,8 @@ Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
   }
 }
 
-Future<Map<String, dynamic>> createAccount(createAccountData) async {
+Future<Map<String, dynamic>> createAccount(
+    createAccountData, Map<String, dynamic> createUserData) async {
   try {
     Response response = await dio.post(
       'api/create_account/',
@@ -125,7 +126,12 @@ Future<Map<String, dynamic>> createAccount(createAccountData) async {
         'password': createAccountData["password"]
       };
       final Future<Map<String, dynamic>> re = login(loginData);
-
+      re.then((valu) {
+        print(valu);
+        createUser(createUserData).then((value) {
+          print(value);
+        });
+      });
       return re;
     } else {
       final Map<String, dynamic> gResult = {'result': "Create Account Error"};
@@ -139,13 +145,15 @@ Future<Map<String, dynamic>> createAccount(createAccountData) async {
 }
 
 Future<Map<String, dynamic>> createUser(createUserData) async {
+  final accessToken = await secureStorage.read(key: "accessToken");
   try {
     Response response = await dio.post(
       'api/user_account/',
       data: json.encode(createUserData),
+      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final Map<String, dynamic> gResult = {'result': "success"};
 
       return gResult;

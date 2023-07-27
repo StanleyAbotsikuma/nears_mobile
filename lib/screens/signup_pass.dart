@@ -99,47 +99,40 @@ class _SignupScreenPasswordState extends State<SignupScreenPassword> {
                                 "device_id": deviceID,
                                 'password': passwordController.text.trim()
                               };
+                              final Map<String, dynamic> createUserData = {
+                                "first_name": Provider.of<AppProvider>(context,
+                                        listen: false)
+                                    .getFirstName(),
+                                "last_name": Provider.of<AppProvider>(context,
+                                        listen: false)
+                                    .getLastName(),
+                                "date_of_birth": Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getDateOfBirth(),
+                                "occupation": Provider.of<AppProvider>(context,
+                                        listen: false)
+                                    .getOccupation(),
+                                "phone_number": Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getPhoneNumber(),
+                                "ghana_post_gps": Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getGhanaPostGps(),
+                                "place_of_residence": Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getPlaceOfResidence(),
+                                "ghana_card_number": Provider.of<AppProvider>(
+                                        context,
+                                        listen: false)
+                                    .getGhanaCardNumber()
+                              };
 
                               final Future<Map<String, dynamic>> a =
-                                  createAccount(createAccountData);
-                              Map<String, dynamic> accountData = await a;
-                              dynamic results = accountData["results"];
-                              if (results == "success") {
-                                final Map<String, dynamic> createUserData = {
-                                  "first_name": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getFirstName(),
-                                  "last_name": Provider.of<AppProvider>(context,
-                                          listen: false)
-                                      .getLastName(),
-                                  "date_of_birth": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getDateOfBirth(),
-                                  "occupation": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getOccupation(),
-                                  "phone_number": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getPhoneNumber(),
-                                  "ghana_post_gps": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getGhanaPostGps(),
-                                  "place_of_residence":
-                                      Provider.of<AppProvider>(context,
-                                              listen: false)
-                                          .getPlaceOfResidence(),
-                                  "ghana_card_number": Provider.of<AppProvider>(
-                                          context,
-                                          listen: false)
-                                      .getGhanaCardNumber()
-                                };
-                                createUser(createUserData);
-                              }
+                                  createAccount(createAccountData,createUserData);
                             }
                           }),
                           TextButton(

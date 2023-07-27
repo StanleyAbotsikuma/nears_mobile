@@ -39,12 +39,11 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
     );
 
     if (results != null) {
-      DateTime dateTime =
-          DateTime.parse(results[1]!.toString().replaceAll(" ", "T"));
-      final dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      DateTime dateTime = DateTime.parse(results[0]!.toString());
+      final dateOnly =
+          "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
 
       dateOfBirthController.text = dateOnly.toString();
-      print(dateOnly);
     }
   }
 

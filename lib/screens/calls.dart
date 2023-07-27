@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+
+import '../configs/connections.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -32,6 +39,7 @@ class _CallScreenState extends State<CallScreen> {
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
     init();
+    signaller();
     super.initState();
   }
 
@@ -44,23 +52,9 @@ class _CallScreenState extends State<CallScreen> {
             Expanded(
               child: Stack(children: [
                 RTCVideoView(
-                  _remoteRTCVideoRenderer,
+                  _localRTCVideoRenderer,
                   objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 ),
-                Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: SizedBox(
-                    height: 150,
-                    width: 120,
-                    child: RTCVideoView(
-                      _localRTCVideoRenderer,
-                      mirror: isFrontCameraSelected,
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                    ),
-                  ),
-                )
               ]),
             ),
             Padding(
@@ -99,10 +93,7 @@ class _CallScreenState extends State<CallScreen> {
     _rtcPeerConnection = await createPeerConnection({
       'iceServers': [
         {
-          'urls': [
-            'stun:stun1.l.google.com:19302',
-            'stun:stun2.l.google.com:19302'
-          ]
+          'urls': ['stun:stun2.l.google.com:19302']
         }
       ]
     });
@@ -174,5 +165,64 @@ class _CallScreenState extends State<CallScreen> {
     _localStream?.dispose();
     _rtcPeerConnection?.dispose();
     super.dispose();
+  }
+
+  Future<void> signaller() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+    final accessToken = await secureStorage.read(key: "accessToken");
+
+    final wsUrl = Uri.parse(
+        "${AppConnections.wsType}${AppConnections.host}ws/test/sdfsdf/?token=${accessToken!}");
+    var channel = WebSocketChannel.connect(wsUrl);
+
+    channel.stream.listen((message) {
+      try {
+        final data = json.decode(message.toString());
+        switch (data['message_type']) {
+          case "offers":
+            handleOffer(data['data'], channel);
+            break;
+
+          case "candidates":
+            handleCandidate(data['data']);
+            break;
+
+          default:
+            break;
+        }
+      } catch (e) {
+        print(e);
+      }
+
+      //
+    });
+  }
+
+  void handleCandidate(data) {
+    final ca = jsonDecode(data.toString());
+    // print(ca);
+    // print("sfdsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf");
+    // print(ca["sdpMid"]);
+    _rtcPeerConnection!.addCandidate(
+        RTCIceCandidate(ca["candidate"], ca["sdpMid"], ca["sdpMLineIndex"]));
+  }
+
+  Future<void> handleOffer(data, channel) async {
+    final answer = jsonDecode(data.toString());
+    // create SDP answer
+    final answerJson = json.encode({
+      'type': answer['type'],
+      'sdp': answer['sdp'],
+    });
+    final remoteDescription =
+        RTCSessionDescription(answer['sdp'], answer['type']);
+    await _rtcPeerConnection!.setRemoteDescription(remoteDescription);
+
+    Future<RTCSessionDescription> answera = _rtcPeerConnection!.createAnswer();
+    answer.then((value) {
+      channel.sink
+          .add(jsonEncode({'message_type': 'answera', 'data': answera}));
+    });
   }
 }

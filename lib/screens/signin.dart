@@ -102,9 +102,11 @@ class _SigninScreenState extends State<SigninScreen> {
                                 'password': passwordController.text.trim()
                               };
 
-                              final tokens = await login(loginData);
-                              final data = await fetchData();
-                              print(data);
+                              await login(loginData).then((value) {
+                                fetchData().then((value) {
+                                  Navigator.pushNamed(context, "/home");
+                                });
+                              });
                             } else {
                               CoolAlert.show(
                                 context: context,
