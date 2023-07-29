@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -51,17 +52,26 @@ class _CallScreenState extends State<CallScreen> {
 
   void onMessageReceived(dynamic message) {
     try {
-      final data = jsonDecode(message.toString());
-      switch (data['message_type']) {
-        case "offers":
-          // handleOffer(data['data'].toString(), channel);
+      final Map<String, dynamic> data = json.decode(message.toString());
+      print(data);
+      // print(data);
+      if (data['receiver'].toString() == "caller") {
+        switch (data['type']) {
+          case "offer":
+            // handleOffer(data['data'].toString(), channel);
 
-          break;
-        case "candidates":
-          handleCandidate(data['data'].toString());
-          break;
-        default:
-          break;
+            handleOffer(data['data'][0], data['data'][1]);
+            break;
+          case "candidate":
+            _rtcPeerConnection!.addCandidate(RTCIceCandidate(
+              data['data'][0],
+              data['data'][1],
+              data['data'][2],
+            ));
+            break;
+          default:
+            break;
+        }
       }
     } catch (e) {
       print(e);
@@ -162,6 +172,8 @@ class _CallScreenState extends State<CallScreen> {
     // set source for local video renderer
     _localRTCVideoRenderer.srcObject = _localStream;
     setState(() {});
+    _rtcPeerConnection!.onIceCandidate =
+        (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
   }
 
   _leaveCall() {
@@ -210,31 +222,30 @@ class _CallScreenState extends State<CallScreen> {
     super.dispose();
   }
 
-  void handleCandidate(data) {
-    final ca = jsonDecode(data.toString());
-    // print(ca["candidate"]);
-    // print("sfdsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf");
-    // print(ca["sdpMid"]);
-    // _rtcPeerConnection!.addCandidate(
-    //     RTCIceCandidate(ca["candidate"], ca["sdpMid"], ca["sdpMLineIndex"]));
+  Future<void> handleOffer(type, offer) async {
+    await _rtcPeerConnection!.setRemoteDescription(
+      RTCSessionDescription(
+        offer,
+        type,
+      ),
+    );
+
+    // create SDP answer
+    RTCSessionDescription answer = await _rtcPeerConnection!.createAnswer();
+    channel!.sink.add(json.encode({
+      "receiver": "agent",
+      "type": "answer",
+      "data": [answer.type, answer.sdp]
+    }));
+    // set SDP answer as localDescription for peerConnection
+    _rtcPeerConnection!.setLocalDescription(answer);
+    // send iceCandidate generated to remote peer over signalling
+    for (RTCIceCandidate candidate in rtcIceCadidates) {
+      channel!.sink.add(json.encode({
+        "receiver": "agent",
+        "type": "candidate",
+        "data": [candidate]
+      }));
+    }
   }
-
-  // Future<void> handleOffer(data, channel) async {
-  //   final answer = json.decode(data.toString());
-  //   print(answer);
-  //   // create SDP answer
-  //   // final answerJson = json.encode({
-  //   //   'type': answer['type'],
-  //   //   'sdp': answer['sdp'],
-  //   // });
-  //   // final remoteDescription =
-  //   //     RTCSessionDescription(answer['sdp'], answer['type']);
-  //   // await _rtcPeerConnection!.setRemoteDescription(remoteDescription);
-
-  //   // Future<RTCSessionDescription> answera = _rtcPeerConnection!.createAnswer();
-  //   // answer.then((value) {
-  //   //   channel.sink
-  //   //       .add(jsonEncode({'message_type': 'answera', 'data': answera}));
-  //   // });
-  // }
 }
