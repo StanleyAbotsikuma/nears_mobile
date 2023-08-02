@@ -7,10 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 import '../configs/connections.dart';
+import '../utils/app_provider.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -50,7 +52,7 @@ class _CallScreenState extends State<CallScreen> {
         "receiver": "nears",
         "type": "emergency",
         "data": [
-          [5.582837272636339, -0.22261918043969944],
+          Provider.of<AppProvider>(context, listen: false).getlocation(),
           "9-12 Dadeban Rd, Accra"
         ]
       }));

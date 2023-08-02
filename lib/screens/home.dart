@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
 
 import '../configs/images.dart';
+import '../utils/functions.dart';
 import 'pages/homepage.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,6 +19,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool check = true;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation().then((Position position) {
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+
+     
+    }).catchError((e) {
+      // Handle any errors that occur while getting the location
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

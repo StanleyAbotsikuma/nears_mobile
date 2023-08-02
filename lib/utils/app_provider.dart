@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppProvider with ChangeNotifier {
   String appStage = "";
-
+  double longitude = 0.00;
+  double latitude = 0.00;
 // sign up stages
   bool stage1 = false;
   bool stage2 = false;
@@ -96,5 +97,15 @@ class AppProvider with ChangeNotifier {
     this.emailAddress = emailAddress;
     stage2 = true;
     notifyListeners();
+  }
+
+  setCurrentLocation({required double longitude, required double latitude}) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    notifyListeners();
+  }
+
+  List<double> getlocation() {
+    return [longitude, latitude];
   }
 }

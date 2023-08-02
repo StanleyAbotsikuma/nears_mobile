@@ -4,12 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'utils/app_provider.dart';
 import 'utils/routes.dart';
-import 'utils/functions.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
-  // determinePosition();
   runApp(const MyApp());
 }
 
