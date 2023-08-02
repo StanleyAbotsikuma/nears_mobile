@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:gap/gap.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
@@ -31,15 +34,28 @@ class _CallScreenState extends State<CallScreen> {
 
   // list of rtcCandidates to be sent over signalling
   List<RTCIceCandidate> rtcIceCadidates = [];
-  FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   WebSocketChannel? channel;
   // media status
   bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
   Future<void> initWebSocket() async {
     final accessToken = await secureStorage.read(key: "accessToken");
     final wsUrl = Uri.parse(
-        "${AppConnections.wsType}${AppConnections.host}ws/test/sdfsdf/?token=${accessToken!}");
+        "${AppConnections.wsType}${AppConnections.host}ws/emergency/?token=${accessToken!}");
     channel = WebSocketChannel.connect(wsUrl);
+
+    channel!.ready.then((value) {
+      // print("thisvalue" {value.isNull});
+      channel!.sink.add(json.encode({
+        "receiver": "nears",
+        "type": "emergency",
+        "data": [
+          [5.582837272636339, -0.22261918043969944],
+          "9-12 Dadeban Rd, Accra"
+        ]
+      }));
+    });
+
     channel!.stream.listen(onMessageReceived, onError: onError, onDone: onDone);
   }
 
@@ -107,32 +123,49 @@ class _CallScreenState extends State<CallScreen> {
                   _localRTCVideoRenderer,
                   objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 ),
+                SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 330.w,
+                            height: 43.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(68),
+                              color: const Color.fromARGB(180, 244, 244, 244),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                      isAudioOn ? Icons.mic : Icons.mic_off),
+                                  onPressed: _toggleMic,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.call_end),
+                                  iconSize: 30,
+                                  onPressed: _leaveCall,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.cameraswitch),
+                                  onPressed: _switchCamera,
+                                ),
+                                IconButton(
+                                  icon: Icon(isVideoOn
+                                      ? Icons.videocam
+                                      : Icons.videocam_off),
+                                  onPressed: _toggleCamera,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Gap(46.h)
+                        ])),
               ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
-                    onPressed: _toggleMic,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.call_end),
-                    iconSize: 30,
-                    onPressed: _leaveCall,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.cameraswitch),
-                    onPressed: _switchCamera,
-                  ),
-                  IconButton(
-                    icon: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
-                    onPressed: _toggleCamera,
-                  ),
-                ],
-              ),
             ),
           ],
         ),
@@ -143,9 +176,13 @@ class _CallScreenState extends State<CallScreen> {
   init() async {
     // create peer connection
     _rtcPeerConnection = await createPeerConnection({
+      "sdpSemantics": "plan-b",
       'iceServers': [
         {
-          'urls': ['stun:stun2.l.google.com:19302']
+          'urls': [
+            'stun:stun1.l.google.com:19302',
+            'stun:stun2.l.google.com:19302'
+          ]
         }
       ]
     });
