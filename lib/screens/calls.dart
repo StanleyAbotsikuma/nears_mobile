@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js_interop';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
@@ -47,13 +46,12 @@ class _CallScreenState extends State<CallScreen> {
     channel = WebSocketChannel.connect(wsUrl);
 
     channel!.ready.then((value) {
-      // print("thisvalue" {value.isNull});
       channel!.sink.add(json.encode({
         "receiver": "nears",
         "type": "emergency",
         "data": [
           Provider.of<AppProvider>(context, listen: false).getlocation(),
-          "9-12 Dadeban Rd, Accra"
+          Provider.of<AppProvider>(context, listen: false).getAddress()
         ]
       }));
     });

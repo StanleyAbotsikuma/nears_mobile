@@ -17,7 +17,7 @@ Future<Position> getCurrentLocation() async {
     // Location services are disabled
     return Future.error('Location services are disabled');
   }
-  
+
   // Request location permission
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
@@ -185,6 +185,26 @@ Future<Map<String, dynamic>> createUser(createUserData) async {
       final Map<String, dynamic> gResult = {'result': "success"};
 
       return gResult;
+    } else {
+      final Map<String, dynamic> gResult = {'result': "Create Account Error"};
+      return gResult;
+    }
+  } catch (e) {
+    final Map<String, dynamic> gResult = {'result': "error"};
+
+    return gResult;
+  }
+}
+
+Future<Map<String, dynamic>> getAddress(
+    {required double lat, required double lon}) async {
+  final dioa = Dio();
+  try {
+    final response =
+        await dioa.get("https://geocode.maps.co/reverse?lat=$lat&lon=$lon");
+
+    if (response.statusCode == 200) {
+      return response.data;
     } else {
       final Map<String, dynamic> gResult = {'result': "Create Account Error"};
       return gResult;

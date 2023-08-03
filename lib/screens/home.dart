@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,8 +8,10 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/screens/widgets.dart';
+import 'package:provider/provider.dart';
 
 import '../configs/images.dart';
+import '../utils/app_provider.dart';
 import '../utils/functions.dart';
 import 'pages/homepage.dart';
 
@@ -22,13 +27,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getCurrentLocation().then((Position position) {
+    final getlocation = getCurrentLocation();
+    getlocation.then((Position position) {
       double latitude = position.latitude;
       double longitude = position.longitude;
+      Provider.of<AppProvider>(context, listen: false)
+          .setCurrentLocation(longitude: longitude, latitude: latitude);
+      getAddress(lat: latitude, lon: longitude).then((value) {
+        // final address = jsonDecode(value.toString());
+        // CoolAlert.show(
+        //   context: context,
+        //   type: CoolAlertType.success,
+        //   title: 'location get success',
+        //   text: address["display_name"],
+        //   loopAnimation: false,
+        // );
+        Provider.of<AppProvider>(context, listen: false)
+            .setCurrentAddress(location: value["display_name"]);
+        CoolAlert.show(
+          context: context,
+          type: CoolAlertType.success,
+          title: 'location get success',
+          text: "Address:${value["display_name"]}",
+          loopAnimation: false,
+        );
+      });
 
-     
+      setState(() {});
     }).catchError((e) {
-      // Handle any errors that occur while getting the location
+      CoolAlert.show(
+        context: context,
+        type: CoolAlertType.error,
+        title: 'location error',
+        text: "test",
+        loopAnimation: false,
+      );
     });
   }
 
