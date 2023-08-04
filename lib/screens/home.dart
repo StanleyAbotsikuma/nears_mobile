@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nears/configs/colors.dart';
 import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -46,8 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
             .setCurrentAddress(location: value["display_name"]);
         CoolAlert.show(
           context: context,
-          type: CoolAlertType.success,
-          title: 'location get success',
+          type: CoolAlertType.info,
+          confirmBtnColor: AppColors.ashLight,
+          backgroundColor: AppColors.ashLight,
+          textTextStyle: GoogleFonts.jura(),
+          titleTextStyle: GoogleFonts.jura(
+              textStyle:
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+          confirmBtnTextStyle: GoogleFonts.jura(
+              textStyle:
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+          title: 'Current Location',
           text: "Address:${value["display_name"]}",
           loopAnimation: false,
         );
@@ -56,6 +66,13 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     }).catchError((e) {
       CoolAlert.show(
+        confirmBtnColor: AppColors.ashLight,
+        backgroundColor: AppColors.ashLight,
+        textTextStyle: GoogleFonts.jura(),
+        titleTextStyle: GoogleFonts.jura(
+            textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+        confirmBtnTextStyle: GoogleFonts.jura(
+            textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
         context: context,
         type: CoolAlertType.error,
         title: 'location error',
@@ -139,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   )
                                 ],
                                 borderRadius: BorderRadius.circular(68),
-                                color: const Color(0xffd9d9d9),
+                                color: AppColors.ashLight,
                               ),
                               child: Row(
                                 mainAxisAlignment:

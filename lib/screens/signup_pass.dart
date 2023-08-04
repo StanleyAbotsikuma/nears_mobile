@@ -132,7 +132,15 @@ class _SignupScreenPasswordState extends State<SignupScreenPassword> {
                               };
 
                               final Future<Map<String, dynamic>> a =
-                                  createAccount(createAccountData,createUserData);
+                                  createAccount(
+                                      createAccountData, createUserData);
+                              a.then((value) {
+                                if (value["result"] == "success") {
+                                  fetchData().then((value) {
+                                    Navigator.pushNamed(context, "/home");
+                                  });
+                                }
+                              });
                             }
                           }),
                           TextButton(

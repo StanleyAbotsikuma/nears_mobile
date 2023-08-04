@@ -20,6 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../configs/colors.dart';
 import '../configs/images.dart';
 import '../utils/functions.dart';
 import 'widgets.dart';
@@ -34,6 +35,12 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  @override
+  void initState() {
+    phoneNumberController.text = "0276927321";
+    passwordController.text = "1234";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,14 +110,46 @@ class _SigninScreenState extends State<SigninScreen> {
                               };
 
                               await login(loginData).then((value) {
-                                fetchData().then((value) {
-                                  Navigator.pushNamed(context, "/home");
-                                });
+                                if (value["result"] == "success") {
+                                  fetchData().then((value) {
+                                    Navigator.pushNamed(context, "/home");
+                                  });
+                                } else if (value["result"] == "error") {
+                                  CoolAlert.show(
+                                    context: context,
+                                    type: CoolAlertType.error,
+                                    confirmBtnColor: AppColors.ashLight,
+                                    backgroundColor: AppColors.ashLight,
+                                    textTextStyle: GoogleFonts.jura(),
+                                    titleTextStyle: GoogleFonts.jura(
+                                        textStyle: TextStyle(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold)),
+                                    confirmBtnTextStyle: GoogleFonts.jura(
+                                        textStyle: TextStyle(
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold)),
+                                    title: 'Login failed',
+                                    text: 'Enter Correct Username and Password',
+                                    loopAnimation: false,
+                                  );
+                                }
                               });
                             } else {
                               CoolAlert.show(
                                 context: context,
                                 type: CoolAlertType.error,
+                                confirmBtnColor: AppColors.ashLight,
+                                backgroundColor: AppColors.ashLight,
+                                textTextStyle: GoogleFonts.jura(),
+                                titleTextStyle: GoogleFonts.jura(
+                                    textStyle: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold)),
+                                confirmBtnTextStyle: GoogleFonts.jura(
+                                    textStyle: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold)),
                                 title: 'Oops...',
                                 text: 'Enter Username and Password',
                                 loopAnimation: false,
