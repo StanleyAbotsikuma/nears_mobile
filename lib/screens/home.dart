@@ -149,10 +149,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
+                                    color: Colors.grey.withOpacity(0.2),
                                     spreadRadius: 1,
                                     blurRadius: 6,
                                     offset: const Offset(0, 5),
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 6,
+                                    offset: const Offset(5, 0),
                                   )
                                 ],
                                 borderRadius: BorderRadius.circular(68),
