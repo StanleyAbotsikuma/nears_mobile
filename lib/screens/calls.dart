@@ -33,6 +33,8 @@ class _CallScreenState extends State<CallScreen> {
   // RTC peer connection
   RTCPeerConnection? _rtcPeerConnection;
 
+  String agentID = "";
+
   // list of rtcCandidates to be sent over signalling
   List<RTCIceCandidate> rtcIceCadidates = [];
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -40,22 +42,25 @@ class _CallScreenState extends State<CallScreen> {
   // media status
   bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
   Future<void> initWebSocket() async {
-    await player.setUrl(AppAssets.dailing);
+    // await player.setAsset(AppAssets.dailing);
+    // await player.setLoopMode(LoopMode.all);
+    // await player.play();
+
     final accessToken = await secureStorage.read(key: "accessToken");
     final wsUrl = Uri.parse(
         "${AppConnections.wsType}${AppConnections.host}ws/emergency/?token=${accessToken!}");
     channel = WebSocketChannel.connect(wsUrl);
-
     channel!.ready.then((value) {
       channel!.sink.add(json.encode({
         "receiver": "nears",
         "type": "emergency",
         "data": [
+          // ignore: use_build_context_synchronously
           Provider.of<AppProvider>(context, listen: false).getlocation(),
+          // ignore: use_build_context_synchronously
           Provider.of<AppProvider>(context, listen: false).getAddress()
         ]
       }));
-      player.play();
     });
 
     channel!.stream.listen(onMessageReceived, onError: onError, onDone: onDone);
@@ -76,9 +81,7 @@ class _CallScreenState extends State<CallScreen> {
       if (data['receiver'].toString() == "caller") {
         switch (data['type']) {
           case "offer":
-            // handleOffer(data['data'].toString(), channel);
-
-            handleOffer(data['data'][0], data['data'][1]);
+            handleOffer(data['data'][0], data['data'][1], data['from']);
             break;
           case "candidate":
             _rtcPeerConnection!.addCandidate(RTCIceCandidate(
@@ -86,6 +89,8 @@ class _CallScreenState extends State<CallScreen> {
               data['data'][1],
               data['data'][2],
             ));
+            agentID = data['from'];
+            setState(() {});
             break;
           default:
             break;
@@ -104,9 +109,9 @@ class _CallScreenState extends State<CallScreen> {
     print('WebSocket channel closed');
   }
 
-  final player = AudioPlayer();
+  // final player = AudioPlayer();
 
-// await player.stop();
+//
 
   @override
   void initState() {
@@ -125,10 +130,13 @@ class _CallScreenState extends State<CallScreen> {
           children: [
             Expanded(
               child: Stack(children: [
-                RTCVideoView(
-                  _localRTCVideoRenderer,
-                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                ),
+                // !isVideoOn
+                //     ? RTCVideoView(
+                //         _localRTCVideoRenderer,
+                //         objectFit:
+                //             RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                //       )
+                //     : Container(),
                 SizedBox(
                     width: double.infinity,
                     height: double.infinity,
@@ -182,7 +190,7 @@ class _CallScreenState extends State<CallScreen> {
   init() async {
     // create peer connection
     _rtcPeerConnection = await createPeerConnection({
-      "sdpSemantics": "plan-b",
+      // "sdpSemantics": "plan-b",
       'iceServers': [
         {
           'urls': [
@@ -206,7 +214,6 @@ class _CallScreenState extends State<CallScreen> {
           ? {'facingMode': isFrontCameraSelected ? 'user' : 'environment'}
           : false,
     });
-
     // add mediaTrack to peerConnection
     _localStream!.getTracks().forEach((track) {
       _rtcPeerConnection!.addTrack(track, _localStream!);
@@ -214,6 +221,7 @@ class _CallScreenState extends State<CallScreen> {
 
     // set source for local video renderer
     _localRTCVideoRenderer.srcObject = _localStream;
+
     setState(() {});
     _rtcPeerConnection!.onIceCandidate =
         (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
@@ -256,38 +264,44 @@ class _CallScreenState extends State<CallScreen> {
     setState(() {});
   }
 
+  @override
   void dispose() {
     _localRTCVideoRenderer.dispose();
     _remoteRTCVideoRenderer.dispose();
     _localStream?.dispose();
     _rtcPeerConnection?.dispose();
     disposeWebSocket();
+    // player.dispose();
     super.dispose();
   }
 
-  Future<void> handleOffer(type, offer) async {
+  Future<void> handleOffer(type, offer, sender) async {
+    agentID = sender;
     await _rtcPeerConnection!.setRemoteDescription(
       RTCSessionDescription(
         offer,
         type,
       ),
     );
-
+    setState(() {});
     // create SDP answer
     RTCSessionDescription answer = await _rtcPeerConnection!.createAnswer();
     channel!.sink.add(json.encode({
       "receiver": "agent",
       "type": "answer",
-      "data": [answer.type, answer.sdp]
+      "data": [answer.type, answer.sdp],
+      "to": agentID
     }));
     // set SDP answer as localDescription for peerConnection
     _rtcPeerConnection!.setLocalDescription(answer);
+    setState(() {});
     // send iceCandidate generated to remote peer over signalling
     for (RTCIceCandidate candidate in rtcIceCadidates) {
       channel!.sink.add(json.encode({
         "receiver": "agent",
         "type": "candidate",
-        "data": [candidate]
+        "data": [candidate],
+        "to": agentID
       }));
     }
   }
