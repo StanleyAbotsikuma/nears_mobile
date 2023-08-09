@@ -24,6 +24,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   cool_alert: ^2.0.1
   geolocator: ^9.0.2
+  just_audio: ^0.9.34
   
 
 dev_dependencies:
@@ -36,3 +37,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/sounds/
+
+    
+    
+

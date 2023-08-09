@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:nears/configs/images.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 import '../configs/connections.dart';
 import '../utils/app_provider.dart';
@@ -40,6 +40,7 @@ class _CallScreenState extends State<CallScreen> {
   // media status
   bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
   Future<void> initWebSocket() async {
+    await player.setUrl(AppAssets.dailing);
     final accessToken = await secureStorage.read(key: "accessToken");
     final wsUrl = Uri.parse(
         "${AppConnections.wsType}${AppConnections.host}ws/emergency/?token=${accessToken!}");
@@ -54,6 +55,7 @@ class _CallScreenState extends State<CallScreen> {
           Provider.of<AppProvider>(context, listen: false).getAddress()
         ]
       }));
+      player.play();
     });
 
     channel!.stream.listen(onMessageReceived, onError: onError, onDone: onDone);
@@ -101,6 +103,10 @@ class _CallScreenState extends State<CallScreen> {
   void onDone() {
     print('WebSocket channel closed');
   }
+
+  final player = AudioPlayer();
+
+// await player.stop();
 
   @override
   void initState() {
