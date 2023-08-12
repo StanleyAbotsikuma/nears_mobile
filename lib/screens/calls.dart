@@ -7,6 +7,7 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:nears/configs/images.dart';
+import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -40,7 +41,7 @@ class _CallScreenState extends State<CallScreen> {
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   WebSocketChannel? channel;
   // media status
-  bool isAudioOn = true, isVideoOn = true, isFrontCameraSelected = true;
+  bool isAudioOn = true, isVideoOn = false, isFrontCameraSelected = true;
   Future<void> initWebSocket() async {
     // await player.setAsset(AppAssets.dailing);
     // await player.setLoopMode(LoopMode.all);
@@ -76,7 +77,7 @@ class _CallScreenState extends State<CallScreen> {
   void onMessageReceived(dynamic message) {
     try {
       final Map<String, dynamic> data = json.decode(message.toString());
-      print(data);
+      // print(data);
       // print(data);
       if (data['receiver'].toString() == "caller") {
         switch (data['type']) {
@@ -130,13 +131,41 @@ class _CallScreenState extends State<CallScreen> {
           children: [
             Expanded(
               child: Stack(children: [
-                // !isVideoOn
-                //     ? RTCVideoView(
-                //         _localRTCVideoRenderer,
-                //         objectFit:
-                //             RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                //       )
-                //     : Container(),
+                isVideoOn
+                    ? RTCVideoView(
+                        _localRTCVideoRenderer,
+                        objectFit:
+                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      )
+                    : SizedBox(
+                        // decoration: BoxDecoration(image: ),
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                                foregroundColor: Colors.transparent,
+                                backgroundColor: Colors.transparent,
+                                radius: 50,
+                                child: Padding(
+                                  padding: EdgeInsets.all(15.w),
+                                  child: Image.asset(
+                                    "assets/images/profile.png",
+                                    fit: BoxFit.contain,
+                                    width: 90.w,
+                                    height: 90.h,
+                                  ),
+                                )),
+                            Gap(10.h),
+                            SizedBox(
+                              width: double.infinity,
+                              child: title("Audio Call..."),
+                            ),
+                          ],
+                        ),
+                      ),
                 SizedBox(
                     width: double.infinity,
                     height: double.infinity,
@@ -190,11 +219,11 @@ class _CallScreenState extends State<CallScreen> {
   init() async {
     // create peer connection
     _rtcPeerConnection = await createPeerConnection({
-      // "sdpSemantics": "plan-b",
+      "sdpSemantics": "plan-b",
       'iceServers': [
         {
           'urls': [
-            'stun:stun1.l.google.com:19302',
+            // 'stun:stun1.l.google.com:19302',
             'stun:stun2.l.google.com:19302'
           ]
         }
@@ -222,9 +251,25 @@ class _CallScreenState extends State<CallScreen> {
     // set source for local video renderer
     _localRTCVideoRenderer.srcObject = _localStream;
 
+    _rtcPeerConnection!.onIceCandidate = (RTCIceCandidate candidate) {
+      // print("this is mycandidate$candidate");
+
+      rtcIceCadidates.add(candidate);
+      channel!.sink.add(json.encode({
+        "receiver": "agent",
+        "type": "candidate",
+        "data": [
+          {
+            "sdpMid": candidate.sdpMid,
+            "sdpMLineIndex": candidate.sdpMLineIndex,
+            "candidate": candidate.candidate
+          }
+        ],
+        "to": agentID
+      }));
+    };
+
     setState(() {});
-    _rtcPeerConnection!.onIceCandidate =
-        (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
   }
 
   _leaveCall() {
@@ -296,11 +341,11 @@ class _CallScreenState extends State<CallScreen> {
     _rtcPeerConnection!.setLocalDescription(answer);
     setState(() {});
     // send iceCandidate generated to remote peer over signalling
-    for (RTCIceCandidate candidate in rtcIceCadidates) {
+    for (RTCIceCandidate cand in rtcIceCadidates) {
       channel!.sink.add(json.encode({
         "receiver": "agent",
         "type": "candidate",
-        "data": [candidate],
+        "data": [cand],
         "to": agentID
       }));
     }
