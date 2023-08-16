@@ -6,12 +6,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:nears/configs/images.dart';
 import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../configs/connections.dart';
+import '../configs/images.dart';
 import '../utils/app_provider.dart';
 
 class CallScreen extends StatefulWidget {
@@ -43,9 +43,13 @@ class _CallScreenState extends State<CallScreen> {
   // media status
   bool isAudioOn = true, isVideoOn = false, isFrontCameraSelected = true;
   Future<void> initWebSocket() async {
-    // await player.setAsset(AppAssets.dailing);
-    // await player.setLoopMode(LoopMode.all);
-    // await player.play();
+    // try {
+    //   await player.setAsset(AppAssets.dailing);
+    //   await player.setLoopMode(LoopMode.all);
+    //   await player.play();
+    // } catch (e) {
+    //   print(e);
+    // }
 
     final accessToken = await secureStorage.read(key: "accessToken");
     final wsUrl = Uri.parse(
@@ -74,6 +78,13 @@ class _CallScreenState extends State<CallScreen> {
     }
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void onMessageReceived(dynamic message) {
     try {
       final Map<String, dynamic> data = json.decode(message.toString());
@@ -82,6 +93,7 @@ class _CallScreenState extends State<CallScreen> {
       if (data['receiver'].toString() == "caller") {
         switch (data['type']) {
           case "offer":
+            // player.stop();
             handleOffer(data['data'][0], data['data'][1], data['from']);
             break;
           case "candidate":
@@ -110,7 +122,7 @@ class _CallScreenState extends State<CallScreen> {
     print('WebSocket channel closed');
   }
 
-  // final player = AudioPlayer();
+  final player = AudioPlayer();
 
 //
 
@@ -142,9 +154,10 @@ class _CallScreenState extends State<CallScreen> {
                         width: double.infinity,
                         height: double.infinity,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Gap(150.h),
                             CircleAvatar(
                                 foregroundColor: Colors.transparent,
                                 backgroundColor: Colors.transparent,
@@ -161,7 +174,7 @@ class _CallScreenState extends State<CallScreen> {
                             Gap(10.h),
                             SizedBox(
                               width: double.infinity,
-                              child: title("Audio Call..."),
+                              child: title("Calling..."),
                             ),
                           ],
                         ),
@@ -179,6 +192,14 @@ class _CallScreenState extends State<CallScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(68),
                               color: const Color.fromARGB(180, 244, 244, 244),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                  blurRadius: 6,
+                                  offset: const Offset(5, 0),
+                                )
+                              ],
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -223,7 +244,7 @@ class _CallScreenState extends State<CallScreen> {
       'iceServers': [
         {
           'urls': [
-            // 'stun:stun1.l.google.com:19302',
+            'stun:stun1.l.google.com:19302',
             'stun:stun2.l.google.com:19302'
           ]
         }
@@ -239,21 +260,24 @@ class _CallScreenState extends State<CallScreen> {
     // get localStream
     _localStream = await navigator.mediaDevices.getUserMedia({
       'audio': isAudioOn,
-      'video': isVideoOn
-          ? {'facingMode': isFrontCameraSelected ? 'user' : 'environment'}
-          : false,
+      'video': true,
     });
+
     // add mediaTrack to peerConnection
     _localStream!.getTracks().forEach((track) {
       _rtcPeerConnection!.addTrack(track, _localStream!);
     });
 
+    _localStream?.getVideoTracks().forEach((track) {
+      track.enabled = isVideoOn;
+    });
+
     // set source for local video renderer
     _localRTCVideoRenderer.srcObject = _localStream;
+    setState(() {});
 
     _rtcPeerConnection!.onIceCandidate = (RTCIceCandidate candidate) {
       // print("this is mycandidate$candidate");
-
       rtcIceCadidates.add(candidate);
       channel!.sink.add(json.encode({
         "receiver": "agent",
@@ -321,14 +345,14 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> handleOffer(type, offer, sender) async {
-    agentID = sender;
     await _rtcPeerConnection!.setRemoteDescription(
       RTCSessionDescription(
         offer,
         type,
       ),
     );
-    setState(() {});
+    agentID = sender;
+
     // create SDP answer
     RTCSessionDescription answer = await _rtcPeerConnection!.createAnswer();
     channel!.sink.add(json.encode({
@@ -337,6 +361,7 @@ class _CallScreenState extends State<CallScreen> {
       "data": [answer.type, answer.sdp],
       "to": agentID
     }));
+
     // set SDP answer as localDescription for peerConnection
     _rtcPeerConnection!.setLocalDescription(answer);
     setState(() {});
