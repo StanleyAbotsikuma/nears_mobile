@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int alertTime = 4;
+  int alertTime = 3;
   bool _buttonPressed = false;
   bool _countDownActive = false;
   void _increaseCounterWhilePressed() async {
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {});
       await Future.delayed(const Duration(milliseconds: 1000));
       if (alertTime == 0) {
-        alertTime = 4;
+        alertTime = 3;
         _buttonPressed = false;
         // ignore: use_build_context_synchronously
         Navigator.of(context)
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
               },
               onPointerUp: (details) {
                 _buttonPressed = false;
-                alertTime = 4;
+                alertTime = 3;
                 setState(() {});
               },
               child: MaterialButton(
