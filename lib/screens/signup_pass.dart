@@ -72,11 +72,11 @@ class _SignupScreenPasswordState extends State<SignupScreenPassword> {
                           Gap(40.h),
                           label("ENTER PASSWORD"),
                           Gap(10.h),
-                          textField(passwordController),
+                          textFieldPassword(passwordController),
                           Gap(10.h),
                           label("CONFIRM PASSWORD"),
                           Gap(10.h),
-                          textField(confirmPasswordController),
+                          textFieldPassword(confirmPasswordController),
                           Gap(45.h),
                           button("COMPLETE", () async {
                             if (passwordController.text.isNotEmpty &&
@@ -137,7 +137,8 @@ class _SignupScreenPasswordState extends State<SignupScreenPassword> {
                               a.then((value) {
                                 if (value["result"] == "success") {
                                   fetchData().then((value) {
-                                    Navigator.pushNamed(context, "/home");
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        context, "/home", (route) => false);
                                   });
                                 }
                               });

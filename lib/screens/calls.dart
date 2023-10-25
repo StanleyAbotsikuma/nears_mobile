@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../configs/connections.dart';
-import '../configs/images.dart';
 import '../utils/app_provider.dart';
 
 class CallScreen extends StatefulWidget {

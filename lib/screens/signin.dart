@@ -98,7 +98,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           Gap(10.h),
                           label("PASSWORD"),
                           Gap(10.h),
-                          textField(passwordController),
+                          textFieldPassword(passwordController),
                           Gap(20.h),
                           button("SIGN IN", () async {
                             if (phoneNumberController.text.isNotEmpty &&
@@ -160,6 +160,10 @@ class _SigninScreenState extends State<SigninScreen> {
                             // Navigator.pushNamed(context, "/home");
                           }),
                           TextButton(
+                            style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  Color.fromARGB(97, 255, 255, 255)),
+                            ),
                             onPressed: () {
                               Navigator.pushNamed(context, "/signup_1");
                             },
@@ -174,13 +178,6 @@ class _SigninScreenState extends State<SigninScreen> {
                                         fontSize: 17.sp,
                                         fontWeight: FontWeight.bold,
                                         color: const Color(0xff149A57),
-                                        shadows: const [
-                                          Shadow(
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 5.0,
-                                            color: Colors.white,
-                                          )
-                                        ],
                                       ),
                                     ),
                                     textAlign: TextAlign.center,
@@ -193,13 +190,6 @@ class _SigninScreenState extends State<SigninScreen> {
                                         letterSpacing: .5,
                                         fontSize: 17.sp,
                                         color: const Color(0xff294E3B),
-                                        shadows: const [
-                                          Shadow(
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 5.0,
-                                            color: Colors.white,
-                                          )
-                                        ],
                                       ),
                                     ),
                                     textAlign: TextAlign.center,

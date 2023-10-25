@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,9 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/colors.dart';
-import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
-
 import '../configs/images.dart';
 import '../utils/app_provider.dart';
 import '../utils/functions.dart';

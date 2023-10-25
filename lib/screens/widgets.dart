@@ -36,7 +36,7 @@ Text label(String name) {
         letterSpacing: .5,
         fontWeight: FontWeight.w700,
         fontSize: 17.sp,
-        shadows:  const [
+        shadows: const [
           Shadow(
             offset: Offset(0.0, 0.0),
             blurRadius: 5.0,
@@ -57,8 +57,39 @@ Container textField(TextEditingController controller,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(45),
       color: AppColors.ashLight,
+      border: Border.all(
+        color: const Color.fromARGB(255, 147, 147, 147),
+        width: 1.0,
+      ),
     ),
     child: TextField(
+      style: TextStyle(fontSize: 16.sp),
+      controller: controller,
+      readOnly: date,
+      onTap: date ? onFocusChange : null,
+      decoration: const InputDecoration(
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      ),
+    ),
+  );
+}
+
+Container textFieldPassword(TextEditingController controller,
+    [bool date = false, final onFocusChange]) {
+  return Container(
+    width: double.infinity,
+    height: 51.h,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(45),
+      color: AppColors.ashLight,
+      border: Border.all(
+        color: const Color.fromARGB(255, 147, 147, 147),
+        width: 1.0,
+      ),
+    ),
+    child: TextField(
+      obscureText: true,
       style: TextStyle(fontSize: 16.sp),
       controller: controller,
       readOnly: date,
