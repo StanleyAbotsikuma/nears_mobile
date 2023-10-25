@@ -22,9 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool check = true;
-  @override
-  void initState() {
-    super.initState();
+  void updateUserLocation() {
     final getlocation = getCurrentLocation();
     getlocation.then((Position position) {
       double latitude = position.latitude;
@@ -32,39 +30,52 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<AppProvider>(context, listen: false)
           .setCurrentLocation(longitude: longitude, latitude: latitude);
       getAddress(lat: latitude, lon: longitude).then((value) {
-        // final address = jsonDecode(value.toString());
-        // CoolAlert.show(
-        //   context: context,
-        //   type: CoolAlertType.success,
-        //   title: 'location get success',
-        //   text: address["display_name"],
-        //   loopAnimation: false,
-        // );
-        Provider.of<AppProvider>(context, listen: false)
-            .setCurrentAddress(location: value["display_name"]);
-        CoolAlert.show(
-          context: context,
-          type: CoolAlertType.info,
-          confirmBtnColor: AppColors.ashLight,
-          backgroundColor: AppColors.ashLight,
-          textTextStyle: GoogleFonts.jura(),
-          titleTextStyle: GoogleFonts.jura(
-              textStyle:
-                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-          confirmBtnTextStyle: GoogleFonts.jura(
-              textStyle:
-                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-          title: 'Current Location',
-          text: "Address:${value["display_name"]}",
-          loopAnimation: false,
-        );
+        if (value['result'] == "success") {
+          var data = value["message"];
+          Provider.of<AppProvider>(context, listen: false)
+              .setCurrentAddress(location: data["display_name"]);
+
+          CoolAlert.show(
+            context: context,
+            type: CoolAlertType.info,
+            confirmBtnColor: AppColors.ashLight1,
+            backgroundColor: AppColors.ashLight1,
+            textTextStyle: GoogleFonts.jura(),
+            titleTextStyle: GoogleFonts.jura(
+                textStyle:
+                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            confirmBtnTextStyle: GoogleFonts.jura(
+                textStyle:
+                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            title: 'Current Location Updated',
+            text: "Address: ${data["display_name"]}",
+            loopAnimation: false,
+          );
+        } else {
+          CoolAlert.show(
+            confirmBtnColor: AppColors.ashLight1,
+            backgroundColor: AppColors.ashLight1,
+            textTextStyle: GoogleFonts.jura(),
+            titleTextStyle: GoogleFonts.jura(
+                textStyle:
+                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            confirmBtnTextStyle: GoogleFonts.jura(
+                textStyle:
+                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            context: context,
+            type: CoolAlertType.error,
+            title: 'Location Update Error ',
+            text: "Kindly Enable your GPS Services",
+            loopAnimation: false,
+          );
+        }
       });
 
       setState(() {});
     }).catchError((e) {
       CoolAlert.show(
-        confirmBtnColor: AppColors.ashLight,
-        backgroundColor: AppColors.ashLight,
+        confirmBtnColor: AppColors.ashLight1,
+        backgroundColor: AppColors.ashLight1,
         textTextStyle: GoogleFonts.jura(),
         titleTextStyle: GoogleFonts.jura(
             textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
@@ -72,11 +83,21 @@ class _HomeScreenState extends State<HomeScreen> {
             textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
         context: context,
         type: CoolAlertType.error,
-        title: 'location error',
-        text: "test",
+        title: 'Location Update Error ',
+        text: "Kindly Enable your GPS Services",
         loopAnimation: false,
       );
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      updateUserLocation();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

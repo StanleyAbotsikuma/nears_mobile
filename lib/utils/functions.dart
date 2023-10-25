@@ -74,7 +74,7 @@ Future<Map<String, dynamic>> login(loginData) async {
 ////
 ///
 ///
-Future<Object> fetchData() async {
+Future<Map<String, dynamic>> fetchData() async {
   final accessToken = await secureStorage.read(key: "accessToken");
   // print(accessToken);
 
@@ -85,8 +85,11 @@ Future<Object> fetchData() async {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
-      return data;
+      final Map<String, dynamic> gResult = {
+        'result': "success",
+        "message": response.data
+      };
+      return gResult;
     } else {
       final Map<String, dynamic> gResult = {'result': "error"};
       return gResult;
@@ -155,9 +158,9 @@ Future<Map<String, dynamic>> createAccount(
       };
       final Future<Map<String, dynamic>> re = login(loginData);
       re.then((valu) {
-        print(valu);
+        // print(valu);
         createUser(createUserData).then((value) {
-          print(value);
+          // print(value);
         });
       });
       return re;
@@ -204,9 +207,13 @@ Future<Map<String, dynamic>> getAddress(
         await dioa.get("https://geocode.maps.co/reverse?lat=$lat&lon=$lon");
 
     if (response.statusCode == 200) {
-      return response.data;
+      final Map<String, dynamic> gResult = {
+        'result': "success",
+        "message": response.data
+      };
+      return gResult;
     } else {
-      final Map<String, dynamic> gResult = {'result': "Create Account Error"};
+      final Map<String, dynamic> gResult = {'result': "error"};
       return gResult;
     }
   } catch (e) {

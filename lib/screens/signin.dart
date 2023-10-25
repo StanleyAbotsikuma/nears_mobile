@@ -109,17 +109,41 @@ class _SigninScreenState extends State<SigninScreen> {
                                 'password': passwordController.text.trim()
                               };
 
-                              await login(loginData).then((value) {
+                              login(loginData).then((value) {
                                 if (value["result"] == "success") {
                                   fetchData().then((value) {
-                                    Navigator.pushNamed(context, "/home");
+                                    if (value["result"] == "success") {
+                                      print(value["message"]);
+                                      // Navigator.pushNamedAndRemoveUntil(
+                                      // context, "/home", (route) => false);
+                                    } else {
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.error,
+                                        confirmBtnColor: AppColors.ashLight1,
+                                        backgroundColor: AppColors.ashLight1,
+                                        textTextStyle: GoogleFonts.jura(),
+                                        titleTextStyle: GoogleFonts.jura(
+                                            textStyle: TextStyle(
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.bold)),
+                                        confirmBtnTextStyle: GoogleFonts.jura(
+                                            textStyle: TextStyle(
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.bold)),
+                                        title: 'Login failed',
+                                        text:
+                                            'Kindly check your internet connection and try again',
+                                        loopAnimation: false,
+                                      );
+                                    }
                                   });
                                 } else if (value["result"] == "error") {
                                   CoolAlert.show(
                                     context: context,
                                     type: CoolAlertType.error,
-                                    confirmBtnColor: AppColors.ashLight,
-                                    backgroundColor: AppColors.ashLight,
+                                    confirmBtnColor: AppColors.ashLight1,
+                                    backgroundColor: AppColors.ashLight1,
                                     textTextStyle: GoogleFonts.jura(),
                                     titleTextStyle: GoogleFonts.jura(
                                         textStyle: TextStyle(
@@ -139,8 +163,8 @@ class _SigninScreenState extends State<SigninScreen> {
                               CoolAlert.show(
                                 context: context,
                                 type: CoolAlertType.error,
-                                confirmBtnColor: AppColors.ashLight,
-                                backgroundColor: AppColors.ashLight,
+                                confirmBtnColor: AppColors.ashLight1,
+                                backgroundColor: AppColors.ashLight1,
                                 textTextStyle: GoogleFonts.jura(),
                                 titleTextStyle: GoogleFonts.jura(
                                     textStyle: TextStyle(
