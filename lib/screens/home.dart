@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool check = true;
+  int menuSelect = 0;
   void updateUserLocation() {
     final getlocation = getCurrentLocation();
     getlocation.then((Position position) {
@@ -110,7 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //     view: true));
     try {
       updateUserLocation();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -160,52 +162,66 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: MediaQuery.of(context).size.height - 160.h,
                       child: Column(
                         children: [
-                          check
-                              ? const SettingsPage()
-                              : Expanded(
-                                  child: Container(
-                                    color: Colors.yellow,
-                                  ),
-                                ),
+                          menuSelect == 0
+                              ? const HomePage()
+                              : menuSelect == 4
+                                  ? const SetttingsPage()
+                                  : Expanded(
+                                      child: Container(
+                                        color: Colors.yellow,
+                                      ),
+                                    ),
                           // Gap(40.h),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                check = !check;
-                              });
-                            },
-                            child: Container(
-                              width: 376.w,
-                              height: 62.h,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 6,
-                                    offset: const Offset(5, 0),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(68),
-                                color: AppColors.ashLight,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  MenuButtons(AppAssets.homeIcon),
-                                  MenuButtons(AppAssets.followIcon),
-                                  MenuButtons(AppAssets.tipIcon),
-                                  MenuButtons(AppAssets.historyIcon),
-                                  MenuButtons(AppAssets.settingsIcon),
-                                ],
-                              ),
+                          Container(
+                            width: 376.w,
+                            height: 62.h,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 5),
+                                ),
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1,
+                                  blurRadius: 6,
+                                  offset: const Offset(5, 0),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(68),
+                              color: AppColors.ashLight,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                MenuButtons(AppAssets.homeIcon, () {
+                                  setState(() {
+                                    menuSelect = 0;
+                                  });
+                                }),
+                                MenuButtons(AppAssets.followIcon, () {
+                                  setState(() {
+                                    menuSelect = 1;
+                                  });
+                                }),
+                                MenuButtons(AppAssets.tipIcon, () {
+                                  setState(() {
+                                    menuSelect = 2;
+                                  });
+                                }),
+                                MenuButtons(AppAssets.historyIcon, () {
+                                  setState(() {
+                                    menuSelect = 3;
+                                  });
+                                }),
+                                MenuButtons(AppAssets.settingsIcon, () {
+                                  setState(() {
+                                    menuSelect = 4;
+                                  });
+                                }),
+                              ],
                             ),
                           ),
                         ],
@@ -225,7 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
 // ignore: must_be_immutable
 class MenuButtons extends StatefulWidget {
   String icon;
-  MenuButtons(this.icon, {super.key});
+  final callback;
+  MenuButtons(this.icon, this.callback, {super.key});
 
   @override
   State<MenuButtons> createState() => _MenuButtonsState();
@@ -235,7 +252,7 @@ class _MenuButtonsState extends State<MenuButtons> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: widget.callback,
       child: SvgPicture.asset(
         widget.icon,
         width: 22.w,

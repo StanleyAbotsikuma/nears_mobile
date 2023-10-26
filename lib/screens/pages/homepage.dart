@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _messagesDatabaseProvider.initDB();
   }
@@ -67,14 +66,17 @@ class _HomePageState extends State<HomePage> {
             child: title("ARE YOU IN AN \n EMERGENCY?"),
           ),
           Gap(20.h),
-          Text("Press and hold for $alertTime seconds",
-              style: GoogleFonts.jura(
-                  textStyle: TextStyle(
+          Text(
+            "Press and hold for $alertTime seconds",
+            style: GoogleFonts.jura(
+              textStyle: TextStyle(
                 color: const Color(0xffB64949),
                 letterSpacing: .5,
                 fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
-              ))),
+              ),
+            ),
+          ),
           Gap(28.h),
           Container(
             width: 155.h,

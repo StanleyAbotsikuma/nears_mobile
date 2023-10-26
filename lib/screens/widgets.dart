@@ -125,6 +125,29 @@ Container button(String name, final callback) {
   );
 }
 
+Container button1(String name, final callback) {
+  return Container(
+    width: double.infinity,
+    height: 51.h,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(45),
+      color: const Color.fromARGB(218, 244, 49, 49),
+    ),
+    child: MaterialButton(
+      onPressed: callback,
+      textColor: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(45),
+      ),
+      child: Text(
+        name,
+        style: GoogleFonts.jura(fontWeight: FontWeight.w700),
+      ),
+    ),
+  );
+}
+
 // ignore: must_be_immutable
 class VerifyButton extends StatefulWidget {
   String name;
