@@ -9,6 +9,7 @@ import '../screens/signup_verify.dart';
 
 class GenerateRoute {
   //onGenerateRoute init
+
   static Route? onGenerateRoute(RouteSettings settings) {
     //pagePath
     String? pagePath = settings.name;
@@ -16,6 +17,7 @@ class GenerateRoute {
     switch (pagePath) {
       case "/":
         return MaterialPageRoute(builder: (_) => const SigninScreen());
+
       case "/signup_1":
         return MaterialPageRoute(builder: (_) => const SignupScreenOne());
       case "/signup_2":

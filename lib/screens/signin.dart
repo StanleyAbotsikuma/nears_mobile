@@ -19,10 +19,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nears/configs/const_keys.dart';
 
 import '../configs/colors.dart';
 import '../configs/images.dart';
 import '../utils/functions.dart';
+import '../utils/sharedpref.dart';
 import 'widgets.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -35,8 +37,25 @@ class SigninScreen extends StatefulWidget {
 class _SigninScreenState extends State<SigninScreen> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  // ignore: non_constant_identifier_names
+  void check_sign_in_status() async {
+    Sharepreference.instance.containsKey(AppConstKey.signed_in).then((value) {
+      if (value) {
+        Sharepreference.instance
+            .getBooleanValue(AppConstKey.signed_in)
+            .then((value) {
+          if (value) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/home", (route) => false);
+          } else {}
+        });
+      } else {}
+    });
+  }
+
   @override
   void initState() {
+    check_sign_in_status();
     phoneNumberController.text = "0276927321";
     passwordController.text = "1234";
     super.initState();
@@ -113,9 +132,28 @@ class _SigninScreenState extends State<SigninScreen> {
                                 if (value["result"] == "success") {
                                   fetchData().then((value) {
                                     if (value["result"] == "success") {
-                                      print(value["message"]);
-                                      // Navigator.pushNamedAndRemoveUntil(
-                                      // context, "/home", (route) => false);
+                                      var data = value["message"];
+                                      Sharepreference.instance.setBooleanValue(
+                                          AppConstKey.signed_in, true);
+
+                                      Sharepreference.instance.setStringValue(
+                                          AppConstKey.first_name,
+                                          data[AppConstKey.first_name]);
+                                      Sharepreference.instance.setStringValue(
+                                          AppConstKey.last_name,
+                                          data[AppConstKey.last_name]);
+                                      Sharepreference.instance.setStringValue(
+                                          AppConstKey.date_of_birth,
+                                          data[AppConstKey.date_of_birth]);
+                                      Sharepreference.instance.setStringValue(
+                                          AppConstKey.place_of_residence,
+                                          data[AppConstKey.place_of_residence]);
+                                      Sharepreference.instance.setStringValue(
+                                          AppConstKey.ghana_card_number,
+                                          data[AppConstKey.ghana_card_number]);
+
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context, "/home", (route) => false);
                                     } else {
                                       CoolAlert.show(
                                         context: context,
