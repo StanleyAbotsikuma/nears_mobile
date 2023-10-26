@@ -25,6 +25,9 @@ dependencies:
   cool_alert: ^2.0.1
   geolocator: ^9.0.2
   just_audio: ^0.9.34
+  sqflite: ^2.3.0
+  path_provider: ^2.1.1
+  path: ^1.8.3
   
 
 dev_dependencies:
