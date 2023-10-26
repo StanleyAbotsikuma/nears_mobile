@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'messages_model.dart';
 
-class UserDatabaseProvider with ChangeNotifier {
+class MessagesDatabaseProvider with ChangeNotifier {
   Database? _database;
 
   Future<Database> get database async {
@@ -32,7 +32,7 @@ class UserDatabaseProvider with ChangeNotifier {
             id TEXT PRIMARY KEY,
             name TEXT,
             message TEXT,
-            date DATETIME  ,
+            date DATETIME,
             sender TEXT,
             level INT,
             view BOOLEAN DEFAULT 0
@@ -45,6 +45,30 @@ class UserDatabaseProvider with ChangeNotifier {
     final db = await database;
     await db.insert('messages', msg.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+    notifyListeners();
+  }
+
+  Future<List<Messages>> getMessages() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('messages', where: 'view = ?', whereArgs: [true]);
+    return List.generate(maps.length, (i) {
+      return Messages(
+          id: maps[i]['id'],
+          name: maps[i]['name'],
+          message: maps[i]['message'],
+          sender: maps[i]['sender']);
+    });
+  }
+
+  Future<void> dismissMessages(String id) async {
+    final db = await database;
+    await db.update(
+      'messages',
+      {'view': 0},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     notifyListeners();
   }
 }

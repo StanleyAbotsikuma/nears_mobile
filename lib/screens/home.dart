@@ -7,11 +7,14 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/colors.dart';
+import 'package:nears/utils/messages_model.dart';
 import 'package:provider/provider.dart';
 import '../configs/images.dart';
 import '../utils/app_provider.dart';
+import '../utils/broadcase_db.dart';
 import '../utils/functions.dart';
 import 'pages/homepage.dart';
+import 'pages/settings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -90,14 +93,24 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // final MessagesDatabaseProvider _messagesDatabaseProvider =
+  //     MessagesDatabaseProvider();
   @override
   void initState() {
     super.initState();
+    // _messagesDatabaseProvider.initDB();
+    // _messagesDatabaseProvider.addMessage(Messages(
+    //     id: "65-52",
+    //     name: "John Doe",
+    //     message:
+    //         "HThe misuse of arms is a danger to our peace and security. Say 'No' to illicit arms in Ghana.See Something, Say Something.Be Vigilant Call 999",
+    //     date: "2023-10-26T09:30:00Z",
+    //     sender: "Jane Smith",
+    //     level: 2,
+    //     view: true));
     try {
       updateUserLocation();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -148,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: [
                           check
-                              ? const HomePage()
+                              ? const SettingsPage()
                               : Expanded(
                                   child: Container(
                                     color: Colors.yellow,

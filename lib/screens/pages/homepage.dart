@@ -5,8 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nears/utils/messages_model.dart';
 
 import '../../configs/images.dart';
+import '../../utils/broadcase_db.dart';
 import '../calls.dart';
 import '../widgets.dart';
 
@@ -42,6 +44,16 @@ class _HomePageState extends State<HomePage> {
       }
     }
     _countDownActive = false;
+  }
+
+  final MessagesDatabaseProvider _messagesDatabaseProvider =
+      MessagesDatabaseProvider();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _messagesDatabaseProvider.initDB();
   }
 
   @override
@@ -103,45 +115,60 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(top: 25.h, right: 10.w, left: 10.w),
-              decoration: BoxDecoration(
-                  color: const Color(0xfff4f4f4),
-                  borderRadius: BorderRadius.circular(25)),
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: 1,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        width: 348.w,
-                        height: 76.h,
-                        margin: EdgeInsets.all(10.w),
-                        padding: EdgeInsets.only(left: 20.h),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(45),
-                            color: const Color(0x424cffc9)),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Text(
-                                "The misuse of arms is a danger to our peace and security. Say 'No' to illicit arms in Ghana.See Something, Say Something.Be Vigilant Call 999",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: SvgPicture.asset(
-                                AppAssets.closeIcon,
-                                width: 14.w,
-                                height: 14.h,
-                              ),
-                            ),
-                          ],
-                        ));
-                  }),
-            ),
+                margin: EdgeInsets.only(top: 25.h, right: 10.w, left: 10.w),
+                decoration: BoxDecoration(
+                    color: const Color(0xfff4f4f4),
+                    borderRadius: BorderRadius.circular(25)),
+                child: FutureBuilder<List<Messages>>(
+                  future: _messagesDatabaseProvider.getMessages(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Messages>> snapshot) {
+                    if (snapshot.hasData) {
+                      List<Messages> msgs = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: msgs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Messages msg = msgs[index];
+                          return Container(
+                              width: 348.w,
+                              height: 76.h,
+                              margin: EdgeInsets.all(10.w),
+                              padding: EdgeInsets.only(left: 20.h),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(45),
+                                  color: const Color(0x424cffc9)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      msg.message!,
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      _messagesDatabaseProvider
+                                          .dismissMessages(msg.id!);
+                                      setState(() {});
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppAssets.closeIcon,
+                                      width: 10.w,
+                                      height: 14.h,
+                                    ),
+                                  ),
+                                ],
+                              ));
+                        },
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )),
           ),
         ],
       ),

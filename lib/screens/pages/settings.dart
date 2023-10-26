@@ -10,14 +10,14 @@ import '../../configs/images.dart';
 import '../calls.dart';
 import '../widgets.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -26,52 +26,29 @@ class _HomePageState extends State<HomePage> {
           Gap(10.h),
           SizedBox(
             width: double.infinity,
-            child: title("ARE YOU IN AN \n EMERGENCY?"),
+            child: title("PROFILE"),
           ),
           Gap(20.h),
           Gap(28.h),
-          Expanded(
+          SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.only(top: 25.h, right: 10.w, left: 10.w),
-              decoration: BoxDecoration(
-                  color: const Color(0xfff4f4f4),
-                  borderRadius: BorderRadius.circular(25)),
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: 6,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        width: 348.w,
-                        height: 76.h,
-                        margin: EdgeInsets.all(10.w),
-                        padding: EdgeInsets.only(left: 20.h),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(45),
-                            color: const Color(0x424cffc9)),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Text(
-                                "The misuse of arms is a danger to our peace and security. Say 'No' to illicit arms in Ghana.See Something, Say Something.Be Vigilant Call 999",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: SvgPicture.asset(
-                                AppAssets.closeIcon,
-                                width: 14.w,
-                                height: 14.h,
-                              ),
-                            ),
-                          ],
-                        ));
-                  }),
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 45.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("First Name",
+                      style: GoogleFonts.jura(
+                          textStyle: TextStyle(
+                        color: const Color(0xffB64949),
+                        letterSpacing: .5,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      )))
+                ],
+              ),
             ),
-          ),
+          )
         ],
       ),
     );
