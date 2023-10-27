@@ -38,24 +38,10 @@ class _SigninScreenState extends State<SigninScreen> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   // ignore: non_constant_identifier_names
-  void check_sign_in_status() async {
-    Sharepreference.instance.containsKey(AppConstKey.signed_in).then((value) {
-      if (value) {
-        Sharepreference.instance
-            .getBooleanValue(AppConstKey.signed_in)
-            .then((value) {
-          if (value) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/home", (route) => false);
-          } else {}
-        });
-      } else {}
-    });
-  }
 
   @override
   void initState() {
-    check_sign_in_status();
+   
     phoneNumberController.text = "0276927321";
     passwordController.text = "1234";
     super.initState();

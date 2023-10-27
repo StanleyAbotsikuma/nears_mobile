@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                 margin: EdgeInsets.only(top: 25.h, right: 10.w, left: 10.w),
                 decoration: BoxDecoration(
                     color: const Color(0xfff4f4f4),
-                    borderRadius: BorderRadius.circular(25)),
+                    borderRadius: BorderRadius.circular(45)),
                 child: FutureBuilder<List<Messages>>(
                   future: _messagesDatabaseProvider.getMessages(),
                   builder: (BuildContext context,

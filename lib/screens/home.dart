@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/colors.dart';
-import 'package:nears/utils/messages_model.dart';
 import 'package:provider/provider.dart';
 import '../configs/images.dart';
 import '../utils/app_provider.dart';
-import '../utils/broadcase_db.dart';
 import '../utils/functions.dart';
 import 'pages/homepage.dart';
 import 'pages/settings.dart';
@@ -242,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class MenuButtons extends StatefulWidget {
   String icon;
   final callback;
-  MenuButtons(this.icon, this.callback, {super.key});
+  MenuButtons(this.icon, void this.callback, {super.key});
 
   @override
   State<MenuButtons> createState() => _MenuButtonsState();

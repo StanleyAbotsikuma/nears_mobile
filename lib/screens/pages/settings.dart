@@ -27,7 +27,7 @@ class Titles extends StatelessWidget {
             ))),
         Gap(5.h),
         Divider(
-          height: 1.h,
+          height: 2.h,
         ),
         Gap(8.h),
         Text(content,
