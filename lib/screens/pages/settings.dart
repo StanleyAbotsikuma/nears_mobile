@@ -112,7 +112,7 @@ class _SetttingsPageState extends State<SetttingsPage> {
                   button1("SIGN OUT", () async {
                     Sharepreference.instance.removeAll();
                     Navigator.pushNamedAndRemoveUntil(
-                        context, "/", (route) => false);
+                        context, "/signin", (route) => false);
                   }),
                 ],
               ),
