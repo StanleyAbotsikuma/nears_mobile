@@ -30,6 +30,8 @@ dependencies:
   path: ^1.8.3
   shake: ^2.2.0
   vibration: ^1.8.3
+  audioplayers: ^5.2.0
+  flutter_isolate: ^2.0.4
   
 
 dev_dependencies:

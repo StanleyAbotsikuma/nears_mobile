@@ -11,6 +11,6 @@ class AppAssets {
   static const String setupBgOpaque = 'assets/images/setup_bg_opaque.png';
   static const String tipIcon = 'assets/images/tip_icon.svg';
   static const String verifyIcon = 'assets/images/verify_icon.svg';
-  static const String dailing = 'assets/sounds/outgoing_dailing.mp3';
+  static const String dailing = 'sounds/outgoing_dailing.mp3';
   static const String nearLogo = 'assets/images/nearLogo.png';
 }

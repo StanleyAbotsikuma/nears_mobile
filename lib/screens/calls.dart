@@ -12,6 +12,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../configs/connections.dart';
 import '../utils/app_provider.dart';
+import '../utils/call_controller.dart';
 
 class CallScreen extends StatefulWidget {
   const CallScreen({super.key});
@@ -124,13 +125,14 @@ class _CallScreenState extends State<CallScreen> {
   final player = AudioPlayer();
 
 //
-
+  final callController = CallController();
   @override
   void initState() {
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
     init();
     initWebSocket();
+
     super.initState();
   }
 

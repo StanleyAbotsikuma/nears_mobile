@@ -7,6 +7,7 @@ import '../screens/home.dart';
 import '../screens/signup_a_info.dart';
 import '../screens/signup_verify.dart';
 import '../screens/splash_screen.dart';
+import '../tests/login.dart';
 
 class GenerateRoute {
   //onGenerateRoute init
@@ -17,7 +18,7 @@ class GenerateRoute {
 
     switch (pagePath) {
       case "/":
-        return MaterialPageRoute(builder: (_) => const SplashScreen());
+        return MaterialPageRoute(builder: (_) => AudioPlayerWidget());
 
       case "/signin":
         return MaterialPageRoute(builder: (_) => const SigninScreen());

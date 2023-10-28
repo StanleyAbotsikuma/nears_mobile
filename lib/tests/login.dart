@@ -1,94 +1,89 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:nears/configs/images.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class AudioPlayerWidget extends StatefulWidget {
+  @override
+  _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
+}
+
+class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
+  late FlutterIsolate audioIsolate;
+  SendPort? audioSendPort;
+
+  @override
+  void initState() {
+    super.initState();
+    startAudioIsolate();
+  }
+
+  void startAudioIsolate() async {
+    ReceivePort isolateReceivePort = ReceivePort();
+    audioIsolate = await FlutterIsolate.spawn(
+        audioIsolateEntry, isolateReceivePort.sendPort);
+    isolateReceivePort.listen((message) {
+      if (message is SendPort) {
+        audioSendPort = message;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    audioIsolate.kill();
+    super.dispose();
+  }
+
+  void playAudio() {
+    audioSendPort!.send('play');
+  }
+
+  void stopAudio() {
+    audioSendPort!.send('stop');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      padding: EdgeInsets.zero,
-      width: double.infinity,
-      height: double.infinity,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Image.asset(
-              AppAssets.setupBg,
-              fit: BoxFit.contain,
-              width: double.infinity,
-            ),
-          ),
-          SafeArea(
-              child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Image.asset(
-                      AppAssets.ghFlag,
-                      fit: BoxFit.contain,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ))
-        ],
-      ),
-    )
-        //   Stack(
-        // children: [
-        //   SizedBox(
-        //     child: Image.asset(
-        //       'assets/images/setup_bg.png',
-        //       fit: BoxFit.cover,
-        //       width: 324,
-        //       height: 51,
-        //     ),
-        //   ),
-        //   Column(
-        //     children: [
-        // Container(
-        //   width: 324,
-        //   height: 51,
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(45),
-        //     color: Color(0xff149a57),
-        //   ),
-        //   child: MaterialButton(
-        //     onPressed: () {},
-        //     child: Text('Button'),
-        //     textColor: Colors.white,
-        //     padding: EdgeInsets.symmetric(vertical: 12),
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.circular(45),
-        //     ),
-        //   ),
-        // ),
-        //       Container(
-        //         width: 324,
-        //         height: 51,
-        //         decoration: BoxDecoration(
-        //           borderRadius: BorderRadius.circular(45),
-        //           color: Color(0xfff2f2f2),
-        //         ),
-        //         child: TextField(
-        //           decoration: InputDecoration(
-        //             border: InputBorder.none,
-        //             contentPadding: EdgeInsets.symmetric(horizontal: 16),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ],
-        //   )
-        );
+        body: SafeArea(
+            child: Column(
+      children: [
+        TextButton(
+          onPressed: playAudio,
+          child: Text('Play Audio'),
+        ),
+        TextButton(
+          onPressed: stopAudio,
+          child: Text('Stop Audio'),
+        ),
+      ],
+    )));
+  }
+}
+
+void audioIsolateEntry(SendPort sendPort) async {
+// Initialize the audio player
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  ReceivePort receivePort = ReceivePort();
+  sendPort.send(receivePort.sendPort);
+
+  await for (dynamic message in receivePort) {
+    if (message is String) {
+      if (message == 'play') {
+// Play audio
+        // await audioPlayer.play(
+        //     UrlSource('https://freewavesamples.com/files/Bontempi-B3-C5.wav'));
+        await audioPlayer.play(AssetSource(AppAssets.dailing));
+
+        await audioPlayer.setReleaseMode(ReleaseMode.loop);
+      } else if (message == 'stop') {
+// Stop audio
+        await audioPlayer.stop();
+      }
+    }
   }
 }
