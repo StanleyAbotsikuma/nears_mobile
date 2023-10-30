@@ -13,4 +13,8 @@ class AppAssets {
   static const String verifyIcon = 'assets/images/verify_icon.svg';
   static const String dailing = 'sounds/outgoing_dailing.mp3';
   static const String nearLogo = 'assets/images/nearLogo.png';
+  // ignore: constant_identifier_names
+  static const String yaa_chinaa_busy = 'sounds/yaa_chinaa_busy_voice_over.mp3';
+
+  // yaa_chinaa_busy_voice_over
 }

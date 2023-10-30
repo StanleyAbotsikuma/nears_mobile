@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nears/screens/calls.dart';
 import 'package:nears/screens/signin.dart';
 import 'package:nears/screens/signup_info.dart';
 import 'package:nears/screens/signup_pass.dart';
@@ -11,18 +12,15 @@ import '../tests/login.dart';
 
 class GenerateRoute {
   //onGenerateRoute init
-
   static Route? onGenerateRoute(RouteSettings settings) {
     //pagePath
     String? pagePath = settings.name;
 
     switch (pagePath) {
       case "/":
-        return MaterialPageRoute(builder: (_) => AudioPlayerWidget());
-
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case "/signin":
         return MaterialPageRoute(builder: (_) => const SigninScreen());
-
       case "/signup_1":
         return MaterialPageRoute(builder: (_) => const SignupScreenOne());
       case "/signup_2":

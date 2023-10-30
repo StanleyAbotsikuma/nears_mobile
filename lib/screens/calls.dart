@@ -1,55 +1,49 @@
 import 'dart:convert';
-
+import 'dart:isolate';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:gap/gap.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import '../configs/connections.dart';
+import '../configs/images.dart';
 import '../utils/app_provider.dart';
 import '../utils/call_controller.dart';
 
 class CallScreen extends StatefulWidget {
-  const CallScreen({super.key});
-
   @override
   State<CallScreen> createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
+  AudioIsolate? _audioIsolate;
+  String calltitle = "Calling...";
   // videoRenderer for localPeer
   final _localRTCVideoRenderer = RTCVideoRenderer();
-
   // videoRenderer for remotePeer
   final _remoteRTCVideoRenderer = RTCVideoRenderer();
-
   // mediaStream for localPeer
   MediaStream? _localStream;
-
   // RTC peer connection
   RTCPeerConnection? _rtcPeerConnection;
-
   String agentID = "";
-
   // list of rtcCandidates to be sent over signalling
   List<RTCIceCandidate> rtcIceCadidates = [];
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   WebSocketChannel? channel;
   // media status
   bool isAudioOn = true, isVideoOn = false, isFrontCameraSelected = true;
+
+  int callState = 0;
+
   Future<void> initWebSocket() async {
-    // try {
-    //   await player.setAsset(AppAssets.dailing);
-    //   await player.setLoopMode(LoopMode.all);
-    //   await player.play();
-    // } catch (e) {
-    //   print(e);
-    // }
+    if (callState == 0) {
+      updateCallState(1);
+    }
 
     final accessToken = await secureStorage.read(key: "accessToken");
     final wsUrl = Uri.parse(
@@ -88,12 +82,14 @@ class _CallScreenState extends State<CallScreen> {
   void onMessageReceived(dynamic message) {
     try {
       final Map<String, dynamic> data = json.decode(message.toString());
-      // print(data);
-      // print(data);
+
       if (data['receiver'].toString() == "caller") {
         switch (data['type']) {
           case "offer":
-            // player.stop();
+            _audioIsolate!.stopAudio();
+            _audioIsolate!.stopBusy();
+            calltitle = "Connected...";
+            setState(() {});
             handleOffer(data['data'][0], data['data'][1], data['from']);
             break;
           case "candidate":
@@ -103,11 +99,25 @@ class _CallScreenState extends State<CallScreen> {
               data['data'][2],
             ));
             agentID = data['from'];
+            if (callState == 1) {}
             setState(() {});
             break;
           default:
             break;
         }
+      } else if (data['receiver'].toString() == "nears") {
+        print(data);
+        _audioIsolate!.stopAudio();
+        print("test test test");
+        _audioIsolate!.playBusy();
+        calltitle = "Agents Busy...";
+        setState(() {});
+        // switch (data['type']) {
+        //   case "busy":
+        //     break;
+        //   default:
+        //     break;
+        // }
       }
     } catch (e) {
       print(e);
@@ -122,18 +132,35 @@ class _CallScreenState extends State<CallScreen> {
     print('WebSocket channel closed');
   }
 
-  final player = AudioPlayer();
-
-//
-  final callController = CallController();
   @override
   void initState() {
+    super.initState();
+
+    setState(() {
+      _audioIsolate = AudioIsolate();
+    });
+    _audioIsolate?.initialize().then((value) => playAudio());
+    init();
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
-    init();
-    initWebSocket();
 
-    super.initState();
+    initWebSocket();
+  }
+
+  void playAudio() {
+    _audioIsolate?.playAudio();
+  }
+
+  void stopAudio() {
+    _audioIsolate?.stopAudio();
+  }
+
+  void playBusy() {
+    _audioIsolate?.playBusy();
+  }
+
+  void stopBusy() {
+    _audioIsolate?.stopBusy();
   }
 
   @override
@@ -151,7 +178,7 @@ class _CallScreenState extends State<CallScreen> {
                             RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                       )
                     : SizedBox(
-                        // decoration: BoxDecoration(image: ),
+                        // decoration: BoxDecoration(image:),
                         width: double.infinity,
                         height: double.infinity,
                         child: Column(
@@ -175,7 +202,7 @@ class _CallScreenState extends State<CallScreen> {
                             Gap(10.h),
                             SizedBox(
                               width: double.infinity,
-                              child: title("Calling..."),
+                              child: title(calltitle),
                             ),
                           ],
                         ),
@@ -314,7 +341,6 @@ class _CallScreenState extends State<CallScreen> {
   _toggleCamera() {
     // change status
     isVideoOn = !isVideoOn;
-
     // enable or disable video track
     _localStream?.getVideoTracks().forEach((track) {
       track.enabled = isVideoOn;
@@ -325,7 +351,6 @@ class _CallScreenState extends State<CallScreen> {
   _switchCamera() {
     // change status
     isFrontCameraSelected = !isFrontCameraSelected;
-
     // switch camera
     _localStream?.getVideoTracks().forEach((track) {
       // ignore: deprecated_member_use
@@ -341,7 +366,8 @@ class _CallScreenState extends State<CallScreen> {
     _localStream?.dispose();
     _rtcPeerConnection?.dispose();
     disposeWebSocket();
-    // player.dispose();
+    _audioIsolate!.dispose();
+
     super.dispose();
   }
 
@@ -353,7 +379,6 @@ class _CallScreenState extends State<CallScreen> {
       ),
     );
     agentID = sender;
-
     // create SDP answer
     RTCSessionDescription answer = await _rtcPeerConnection!.createAnswer();
     channel!.sink.add(json.encode({
@@ -375,5 +400,28 @@ class _CallScreenState extends State<CallScreen> {
         "to": agentID
       }));
     }
+  }
+
+  void dailingSoundIsolateEntry(SendPort sendPort) async {
+    //Initialize the audio player
+    AudioPlayer audioPlayer = AudioPlayer();
+    ReceivePort receivePort = ReceivePort();
+    sendPort.send(receivePort.sendPort);
+    await for (dynamic message in receivePort) {
+      if (message is String) {
+        if (message == 'play') {
+          await audioPlayer.play(AssetSource(AppAssets.dailing));
+          await audioPlayer.setReleaseMode(ReleaseMode.loop);
+        } else if (message == 'stop') {
+          await audioPlayer.stop();
+        }
+      }
+    }
+  }
+
+  void updateCallState(int update) {
+    setState(() {
+      callState = update;
+    });
   }
 }

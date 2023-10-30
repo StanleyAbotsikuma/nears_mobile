@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         // ignore: use_build_context_synchronously
         Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => const CallScreen(),
+          builder: (context) => CallScreen(),
         ))
             .then((value) {
           setState(() {});

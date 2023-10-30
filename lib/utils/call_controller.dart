@@ -1,61 +1,69 @@
 import 'dart:isolate';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:nears/configs/images.dart';
 
-import '../configs/images.dart';
+class AudioIsolate {
+  late FlutterIsolate _isolate;
+  SendPort? _sendPort;
 
-class CallController {
-  late FlutterIsolate audioIsolate;
-  SendPort? audioSendPort;
-  CallController() {
-    startAudioIsolate();
-  }
+  Future<void> initialize() async {
+    BackgroundIsolateBinaryMessenger.ensureInitialized;
 
-  void startAudioIsolate() async {
     ReceivePort isolateReceivePort = ReceivePort();
-    audioIsolate = await FlutterIsolate.spawn(
-        audioIsolateEntry, isolateReceivePort.sendPort);
-    isolateReceivePort.listen((message) {
-      if (message is SendPort) {
-        audioSendPort = message;
-      }
-    });
+    _isolate =
+        await FlutterIsolate.spawn(_isolateEntry, isolateReceivePort.sendPort);
+    _sendPort = await isolateReceivePort.first;
+
+    // isolateReceivePort.listen((message) {
+    //   if (message is SendPort) {
+    //     _sendPort = message;
+    //   }
+    // });
   }
 
-  void audioIsolateEntry(SendPort sendPort) async {
-// Initialize the audio player
-    AudioPlayer audioPlayer = AudioPlayer();
-
-    ReceivePort receivePort = ReceivePort();
-    sendPort.send(receivePort.sendPort);
-
-    await for (dynamic message in receivePort) {
-      if (message is String) {
-        if (message == 'play') {
-// Play audio
-          // await audioPlayer.play(
-          //     UrlSource('https://freewavesamples.com/files/Bontempi-B3-C5.wav'));
-          await audioPlayer.play(AssetSource(AppAssets.dailing));
-
-          await audioPlayer.setReleaseMode(ReleaseMode.loop);
-        } else if (message == 'stop') {
-// Stop audio
-          await audioPlayer.stop();
-        }
-      }
-    }
-  }
-
-  void playAudio() {
-    audioSendPort!.send('play');
+  void playAudio() async {
+    _sendPort!.send('play');
   }
 
   void stopAudio() {
-    audioSendPort!.send('stop');
+    _sendPort!.send('stop');
+  }
+
+  void playBusy() async {
+    _sendPort!.send('playBusy');
+  }
+
+  void stopBusy() {
+    _sendPort!.send('stopBusy');
   }
 
   void dispose() {
-    audioIsolate.kill();
+    _isolate.kill();
+  }
+}
+
+void _isolateEntry(SendPort sendPort) async {
+  // Initialize the audio player
+  AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer1 = AudioPlayer();
+  ReceivePort receivePort = ReceivePort();
+  sendPort.send(receivePort.sendPort);
+  await for (dynamic message in receivePort) {
+    if (message is String) {
+      if (message == 'play') {
+        await audioPlayer.play(AssetSource(AppAssets.dailing));
+        await audioPlayer.setReleaseMode(ReleaseMode.loop);
+      } else if (message == 'stop') {
+        await audioPlayer.stop();
+      } else if (message == 'playBusy') {
+        await audioPlayer1.play(AssetSource(AppAssets.yaa_chinaa_busy));
+        await audioPlayer1.setReleaseMode(ReleaseMode.loop);
+      } else if (message == 'stopBusy') {
+        await audioPlayer1.stop();
+      }
+    }
   }
 }
