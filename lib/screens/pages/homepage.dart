@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/utils/messages_model.dart';
 
 import '../../configs/images.dart';
@@ -68,13 +67,12 @@ class _HomePageState extends State<HomePage> {
           Gap(20.h),
           Text(
             "Press and hold for $alertTime seconds",
-            style: GoogleFonts.jura(
-              textStyle: TextStyle(
-                color: const Color(0xffB64949),
-                letterSpacing: .5,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.sp,
-              ),
+            style: TextStyle(
+              fontFamily: 'Jura',
+              color: const Color(0xffB64949),
+              letterSpacing: .5,
+              fontWeight: FontWeight.bold,
+              fontSize: 14.sp,
             ),
           ),
           Gap(28.h),

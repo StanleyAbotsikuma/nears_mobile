@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/colors.dart';
 import '../configs/images.dart';
 
@@ -9,11 +8,32 @@ Text title(String title) {
   return Text(
     title,
     textAlign: TextAlign.center,
-    style: GoogleFonts.jura(
-      textStyle: TextStyle(
+    style: TextStyle(
+      fontFamily: 'Jura',
+      color: Colors.black,
+      letterSpacing: .5,
+      fontSize: 24.sp,
+      fontWeight: FontWeight.w700,
+      shadows: const [
+        Shadow(
+          offset: Offset(0.0, 0.0),
+          blurRadius: 4.0,
+          color: Color.fromARGB(115, 0, 0, 0),
+        )
+      ],
+    ),
+  );
+}
+
+Text title2(String title) {
+  return Text(
+    title,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+        fontFamily: 'Jura',
         color: Colors.black,
         letterSpacing: .5,
-        fontSize: 24.sp,
+        fontSize: 18.sp,
         fontWeight: FontWeight.w700,
         shadows: const [
           Shadow(
@@ -23,15 +43,15 @@ Text title(String title) {
           )
         ],
       ),
-    ),
+    
   );
 }
 
 Text label(String name) {
   return Text(
     name,
-    style: GoogleFonts.jura(
-      textStyle: TextStyle(
+    style:  TextStyle(
+        fontFamily: 'Jura',
         color: AppColors.whine,
         letterSpacing: .5,
         fontWeight: FontWeight.w700,
@@ -44,7 +64,7 @@ Text label(String name) {
           )
         ],
       ),
-    ),
+    
     textAlign: TextAlign.left,
   );
 }
@@ -119,7 +139,7 @@ Container button(String name, final callback) {
       ),
       child: Text(
         name,
-        style: GoogleFonts.jura(fontWeight: FontWeight.w700),
+        style: const TextStyle(fontFamily: 'Jura', fontWeight: FontWeight.w700),
       ),
     ),
   );
@@ -142,7 +162,7 @@ Container button1(String name, final callback) {
       ),
       child: Text(
         name,
-        style: GoogleFonts.jura(fontWeight: FontWeight.w700),
+        style: const TextStyle(fontFamily: 'Jura', fontWeight: FontWeight.w700),
       ),
     ),
   );
@@ -177,9 +197,10 @@ class _VerifyButtonState extends State<VerifyButton> {
             child: Center(
               child: Text(widget.name,
                   softWrap: true,
-                  style: GoogleFonts.jura(
+                  style: const TextStyle(
+                      fontFamily: 'Jura',
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(187, 19, 19, 19))),
+                      color: Color.fromARGB(187, 19, 19, 19))),
             ),
           ),
           Container(
@@ -200,49 +221,3 @@ class _VerifyButtonState extends State<VerifyButton> {
     );
   }
 }
-
-
-
-// Stack(children: [    Stack(children: [    Image.asset(
-//                             "assets/Ellipse 1.png",
-//                             width: 168,
-//                             height: 168,
-//                             ),
-//                 Image.asset(
-//                             "assets/Ellipse 3.png",
-//                             width: 142.79998779296875,
-//                             height: 142.8000030517578,
-//                             ),
-//                 Image.asset(
-//                             "assets/Ellipse 2.png",
-//                             width: 117.60000610351562,
-//                             height: 117.5999984741211,
-//                             )],),
-//         Container(
-//                 width: 69.33331298828125,
-//                 height: 52,
-//                 )],)
-
-
-
-
-// Text(
-//             "Press and hold for 4 seconds",
-//             style: TextStyle(
-//                 fontSize: 16,
-//                 fontWeight: FontWeith.w700,
-//             )
-//         )
-
-
-
-// Text(
-//             "The misuse of arms is a danger to our peace 
-// and security. Say "No" to illicit arms in Ghana.
-// See Something, Say Something.
-// Be Vigilant Call 999",
-//             style: TextStyle(
-//                 fontSize: 10,
-//                 fontWeight: FontWeith.w700,
-//             )
-//         )

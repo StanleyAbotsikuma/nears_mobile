@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/images.dart';
 import 'widgets.dart';
 
@@ -76,20 +75,19 @@ class _SignupScreenVerifyState extends State<SignupScreenVerify> {
                             child: Center(
                               child: Text(
                                 "BACK",
-                                style: GoogleFonts.jura(
-                                  textStyle: TextStyle(
-                                    letterSpacing: .5,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff149A57),
-                                    shadows: const [
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 5.0,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  ),
+                                style: TextStyle(
+                                  fontFamily: 'Jura',
+                                  letterSpacing: .5,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff149A57),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 5.0,
+                                      color: Colors.white,
+                                    )
+                                  ],
                                 ),
                                 textAlign: TextAlign.center,
                               ),

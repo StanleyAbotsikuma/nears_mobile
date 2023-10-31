@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/colors.dart';
 import 'package:provider/provider.dart';
 import '../configs/images.dart';
@@ -39,13 +38,15 @@ class _HomeScreenState extends State<HomeScreen> {
             type: CoolAlertType.info,
             confirmBtnColor: AppColors.ashLight1,
             backgroundColor: AppColors.ashLight1,
-            textTextStyle: GoogleFonts.jura(),
-            titleTextStyle: GoogleFonts.jura(
-                textStyle:
-                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-            confirmBtnTextStyle: GoogleFonts.jura(
-                textStyle:
-                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            textTextStyle: const TextStyle(fontFamily: 'Jura'),
+            titleTextStyle: TextStyle(
+                fontFamily: 'Jura',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold),
+            confirmBtnTextStyle: TextStyle(
+                fontFamily: 'Jura',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold),
             title: 'Current Location Updated',
             text: "Address: ${data["display_name"]}",
             loopAnimation: false,
@@ -54,13 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
           CoolAlert.show(
             confirmBtnColor: AppColors.ashLight1,
             backgroundColor: AppColors.ashLight1,
-            textTextStyle: GoogleFonts.jura(),
-            titleTextStyle: GoogleFonts.jura(
-                textStyle:
-                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-            confirmBtnTextStyle: GoogleFonts.jura(
-                textStyle:
-                    TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            textTextStyle: const TextStyle(fontFamily: 'Jura'),
+            titleTextStyle: TextStyle(
+                fontFamily: 'Jura',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold),
+            confirmBtnTextStyle: TextStyle(
+                fontFamily: 'Jura',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold),
             context: context,
             type: CoolAlertType.error,
             title: 'Location Update Error ',
@@ -75,11 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
       CoolAlert.show(
         confirmBtnColor: AppColors.ashLight1,
         backgroundColor: AppColors.ashLight1,
-        textTextStyle: GoogleFonts.jura(),
-        titleTextStyle: GoogleFonts.jura(
-            textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-        confirmBtnTextStyle: GoogleFonts.jura(
-            textStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+        textTextStyle: const TextStyle(fontFamily: 'Jura'),
+        titleTextStyle: TextStyle(
+            fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+        confirmBtnTextStyle: TextStyle(
+            fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
         context: context,
         type: CoolAlertType.error,
         title: 'Location Update Error ',

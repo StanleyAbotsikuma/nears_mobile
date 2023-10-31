@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:audioplayers/audioplayers.dart';
@@ -86,6 +87,7 @@ class _CallScreenState extends State<CallScreen> {
       if (data['receiver'].toString() == "caller") {
         switch (data['type']) {
           case "offer":
+            updateCallState(2);
             _audioIsolate!.stopAudio();
             _audioIsolate!.stopBusy();
             calltitle = "Connected...";
@@ -106,18 +108,23 @@ class _CallScreenState extends State<CallScreen> {
             break;
         }
       } else if (data['receiver'].toString() == "nears") {
-        print(data);
-        _audioIsolate!.stopAudio();
-        print("test test test");
-        _audioIsolate!.playBusy();
-        calltitle = "Agents Busy...";
-        setState(() {});
-        // switch (data['type']) {
-        //   case "busy":
-        //     break;
-        //   default:
-        //     break;
-        // }
+        switch (data['type']) {
+          case "busy":
+            updateCallState(3);
+            // print(data);
+            _audioIsolate!.stopAudio();
+            // print("test test test");
+            _audioIsolate!.playBusy();
+            calltitle = "Agents Busy...";
+            setState(() {});
+            break;
+
+          case "end_call":
+            Navigator.of(context).pop();
+            break;
+          default:
+            break;
+        }
       }
     } catch (e) {
       print(e);
@@ -143,8 +150,9 @@ class _CallScreenState extends State<CallScreen> {
     init();
     _localRTCVideoRenderer.initialize();
     _remoteRTCVideoRenderer.initialize();
-
-    initWebSocket();
+    Timer(const Duration(seconds: 4), () {
+      initWebSocket();
+    });
   }
 
   void playAudio() {
@@ -202,8 +210,10 @@ class _CallScreenState extends State<CallScreen> {
                             Gap(10.h),
                             SizedBox(
                               width: double.infinity,
-                              child: title(calltitle),
+                              child: title2(calltitle),
                             ),
+                            Gap(10.h),
+                            callState == 2 ? const CallTimer() : Container(),
                           ],
                         ),
                       ),

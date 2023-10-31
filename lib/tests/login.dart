@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nears/configs/images.dart';
 
@@ -16,7 +18,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     super.initState();
 
     _audioIsolate = AudioIsolate();
-    _audioIsolate?.initialize().then((value) => playAudio());
+    _audioIsolate?.initialize().then((value) => null);
   }
 
   @override
@@ -47,6 +49,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               onPressed: stopAudio,
               child: Text('Stop Audio'),
             ),
+            const CallTimer(),
           ],
         ),
       ),

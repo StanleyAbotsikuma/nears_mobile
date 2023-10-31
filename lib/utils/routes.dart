@@ -17,6 +17,8 @@ class GenerateRoute {
     String? pagePath = settings.name;
 
     switch (pagePath) {
+      // case "/":
+      //   return MaterialPageRoute(builder: (_) => AudioPlayerWidget());
       case "/":
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       case "/signin":

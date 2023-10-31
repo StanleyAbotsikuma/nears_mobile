@@ -18,7 +18,6 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/const_keys.dart';
 
 import '../configs/colors.dart';
@@ -41,7 +40,6 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   void initState() {
-   
     phoneNumberController.text = "0276927321";
     passwordController.text = "1234";
     super.initState();
@@ -146,15 +144,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                         type: CoolAlertType.error,
                                         confirmBtnColor: AppColors.ashLight1,
                                         backgroundColor: AppColors.ashLight1,
-                                        textTextStyle: GoogleFonts.jura(),
-                                        titleTextStyle: GoogleFonts.jura(
-                                            textStyle: TextStyle(
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.bold)),
-                                        confirmBtnTextStyle: GoogleFonts.jura(
-                                            textStyle: TextStyle(
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.bold)),
+                                        textTextStyle:
+                                            const TextStyle(fontFamily: 'Jura'),
+                                        titleTextStyle: TextStyle(
+                                            fontFamily: 'Jura',
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold),
+                                        confirmBtnTextStyle: TextStyle(
+                                            fontFamily: 'Jura',
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.bold),
                                         title: 'Login failed',
                                         text:
                                             'Kindly check your internet connection and try again',
@@ -168,15 +167,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                     type: CoolAlertType.error,
                                     confirmBtnColor: AppColors.ashLight1,
                                     backgroundColor: AppColors.ashLight1,
-                                    textTextStyle: GoogleFonts.jura(),
-                                    titleTextStyle: GoogleFonts.jura(
-                                        textStyle: TextStyle(
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold)),
-                                    confirmBtnTextStyle: GoogleFonts.jura(
-                                        textStyle: TextStyle(
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold)),
+                                    textTextStyle:
+                                        const TextStyle(fontFamily: 'Jura'),
+                                    titleTextStyle: TextStyle(
+                                        fontFamily: 'Jura',
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold),
+                                    confirmBtnTextStyle: TextStyle(
+                                        fontFamily: 'Jura',
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold),
                                     title: 'Login failed',
                                     text: 'Enter Correct Username and Password',
                                     loopAnimation: false,
@@ -189,15 +189,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                 type: CoolAlertType.error,
                                 confirmBtnColor: AppColors.ashLight1,
                                 backgroundColor: AppColors.ashLight1,
-                                textTextStyle: GoogleFonts.jura(),
-                                titleTextStyle: GoogleFonts.jura(
-                                    textStyle: TextStyle(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold)),
-                                confirmBtnTextStyle: GoogleFonts.jura(
-                                    textStyle: TextStyle(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold)),
+                                textTextStyle:
+                                    const TextStyle(fontFamily: 'Jura'),
+                                titleTextStyle: TextStyle(
+                                    fontFamily: 'Jura',
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold),
+                                confirmBtnTextStyle: TextStyle(
+                                    fontFamily: 'Jura',
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold),
                                 title: 'Oops...',
                                 text: 'Enter Username and Password',
                                 loopAnimation: false,
@@ -220,25 +221,21 @@ class _SigninScreenState extends State<SigninScreen> {
                                 children: [
                                   Text(
                                     "Do have an account?",
-                                    style: GoogleFonts.jura(
-                                      textStyle: TextStyle(
-                                        letterSpacing: .5,
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xff149A57),
-                                      ),
+                                    style: TextStyle(
+                                      letterSpacing: .5,
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xff149A57),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
                                     " Sign-Up",
-                                    style: GoogleFonts.jura(
-                                      textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: .5,
-                                        fontSize: 17.sp,
-                                        color: const Color(0xff294E3B),
-                                      ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: .5,
+                                      fontSize: 17.sp,
+                                      color: const Color(0xff294E3B),
                                     ),
                                     textAlign: TextAlign.center,
                                   )

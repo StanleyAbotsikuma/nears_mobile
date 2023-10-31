@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nears/configs/const_keys.dart';
 import '../../utils/sharedpref.dart';
 import '../widgets.dart';
@@ -18,26 +17,26 @@ class Titles extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: GoogleFonts.jura(
-                textStyle: TextStyle(
+            style: TextStyle(
+              fontFamily: 'Jura',
               color: const Color(0xffB64949),
               letterSpacing: .5,
               fontWeight: FontWeight.bold,
               fontSize: 14.sp,
-            ))),
+            )),
         Gap(5.h),
         Divider(
           height: 2.h,
         ),
         Gap(8.h),
         Text(content,
-            style: GoogleFonts.jura(
-                textStyle: TextStyle(
+            style: TextStyle(
+              fontFamily: 'Jura',
               color: const Color.fromARGB(255, 0, 0, 0),
               letterSpacing: .5,
               fontWeight: FontWeight.w700,
               fontSize: 16.sp,
-            ))),
+            )),
         Gap(20.h),
       ],
     );
