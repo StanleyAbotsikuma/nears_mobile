@@ -1,14 +1,56 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
+import 'package:workmanager/workmanager.dart';
 import 'utils/app_provider.dart';
+import 'utils/functions.dart';
 import 'utils/routes.dart';
 
-void main() {
+void main() async {
   Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
+
+  Workmanager().initialize(messageLoadsDispatcher);
+  Workmanager().registerPeriodicTask(
+    "periodic-task-identifier",
+    "simplePeriodicTask",
+    inputData: null,
+    constraints: Constraints(
+      requiresCharging: false,
+      networkType: NetworkType.connected,
+    ),
+  );
+
   runApp(const MyApp());
+}
+
+@pragma('vm:entry-point')
+void messageLoadsDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    final accessToken = await secureStorage.read(key: "accessToken");
+    try {
+      Response response = await dio.get(
+        'api/broadcastmessages/',
+        // options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.data);
+      } else {
+        if (kDebugMode) {
+          print(response);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return Future.value(true);
+  });
 }
 
 class MyApp extends StatelessWidget {

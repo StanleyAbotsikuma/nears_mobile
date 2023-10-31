@@ -128,15 +128,15 @@ class _CallScreenState extends State<CallScreen> {
               textTextStyle: const TextStyle(fontFamily: 'Jura'),
               titleTextStyle: TextStyle(
                   fontFamily: 'Jura',
-                  fontSize: 18.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.bold),
               confirmBtnTextStyle: TextStyle(
                   fontFamily: 'Jura',
-                  fontSize: 18.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold),
               cancelBtnTextStyle: TextStyle(
                   fontFamily: 'Jura',
-                  fontSize: 18.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold),
               confirmBtnText: 'Back',
               confirmBtnColor: Colors.green,
@@ -155,57 +155,17 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   void onError(dynamic error) {
-    CoolAlert.show(
-      context: context,
-      type: CoolAlertType.error,
-      text: 'Connection Error',
-      textTextStyle: const TextStyle(fontFamily: 'Jura'),
-      titleTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      confirmBtnTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      cancelBtnTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      confirmBtnText: 'Retry Again',
-      cancelBtnText: 'End Call',
-      confirmBtnColor: Colors.green,
-      onConfirmBtnTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => CallScreen()),
-        );
-      },
-      onCancelBtnTap: () {
-        Navigator.of(context).pop();
-      },
-    );
+    _audioIsolate!.stopAudio();
+    // print("test test test");
+    _audioIsolate!.playBusy();
+    errorAlert(context);
   }
 
   void onDone() {
-    CoolAlert.show(
-      context: context,
-      type: CoolAlertType.error,
-      text: 'Connection Error',
-      textTextStyle: const TextStyle(fontFamily: 'Jura'),
-      titleTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      confirmBtnTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      cancelBtnTextStyle: TextStyle(
-          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-      confirmBtnText: 'Retry Again',
-      cancelBtnText: 'End Call',
-      confirmBtnColor: Colors.green,
-      onConfirmBtnTap: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => CallScreen()),
-        );
-      },
-      onCancelBtnTap: () {
-        Navigator.of(context).pop();
-      },
-    );
+    _audioIsolate!.stopAudio();
+    // print("test test test");
+    _audioIsolate!.playBusy();
+    errorAlert(context);
   }
 
   @override
@@ -248,10 +208,13 @@ class _CallScreenState extends State<CallScreen> {
           children: [
             Expanded(
               child: Stack(children: [
-                RTCVideoView(
-                  _localRTCVideoRenderer,
-                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                ),
+                isVideoOn
+                    ? RTCVideoView(
+                        _localRTCVideoRenderer,
+                        objectFit:
+                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      )
+                    : Container(),
                 Opacity(
                     opacity: isVideoOn ? 0 : 1,
                     child: SizedBox(
@@ -444,7 +407,11 @@ class _CallScreenState extends State<CallScreen> {
     _remoteRTCVideoRenderer.dispose();
     _localStream?.dispose();
     _rtcPeerConnection?.dispose();
-    disposeWebSocket();
+    try {
+      disposeWebSocket();
+    } catch (e) {
+      print(e);
+    }
     _audioIsolate!.dispose();
 
     super.dispose();

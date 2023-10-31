@@ -1,8 +1,10 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nears/configs/colors.dart';
 import '../configs/images.dart';
+import 'calls.dart';
 
 Text title(String title) {
   return Text(
@@ -30,41 +32,39 @@ Text title2(String title) {
     title,
     textAlign: TextAlign.center,
     style: TextStyle(
-        fontFamily: 'Jura',
-        color: Colors.black,
-        letterSpacing: .5,
-        fontSize: 18.sp,
-        fontWeight: FontWeight.w700,
-        shadows: const [
-          Shadow(
-            offset: Offset(0.0, 0.0),
-            blurRadius: 4.0,
-            color: Color.fromARGB(115, 0, 0, 0),
-          )
-        ],
-      ),
-    
+      fontFamily: 'Jura',
+      color: Colors.black,
+      letterSpacing: .5,
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w700,
+      shadows: const [
+        Shadow(
+          offset: Offset(0.0, 0.0),
+          blurRadius: 4.0,
+          color: Color.fromARGB(115, 0, 0, 0),
+        )
+      ],
+    ),
   );
 }
 
 Text label(String name) {
   return Text(
     name,
-    style:  TextStyle(
-        fontFamily: 'Jura',
-        color: AppColors.whine,
-        letterSpacing: .5,
-        fontWeight: FontWeight.w700,
-        fontSize: 17.sp,
-        shadows: const [
-          Shadow(
-            offset: Offset(0.0, 0.0),
-            blurRadius: 5.0,
-            color: Colors.white,
-          )
-        ],
-      ),
-    
+    style: TextStyle(
+      fontFamily: 'Jura',
+      color: AppColors.whine,
+      letterSpacing: .5,
+      fontWeight: FontWeight.w700,
+      fontSize: 17.sp,
+      shadows: const [
+        Shadow(
+          offset: Offset(0.0, 0.0),
+          blurRadius: 5.0,
+          color: Colors.white,
+        )
+      ],
+    ),
     textAlign: TextAlign.left,
   );
 }
@@ -220,4 +220,39 @@ class _VerifyButtonState extends State<VerifyButton> {
       ),
     );
   }
+}
+
+void errorAlert(context) {
+  CoolAlert.show(
+    context: context,
+    type: CoolAlertType.error,
+    text: '',
+    title: 'Connection Error',
+    textTextStyle: const TextStyle(fontFamily: 'Jura'),
+    titleTextStyle: TextStyle(
+        fontFamily: 'Jura', fontSize: 16.sp, fontWeight: FontWeight.bold),
+    confirmBtnTextStyle: TextStyle(
+        fontFamily: 'Jura',
+        fontSize: 14.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.white),
+    cancelBtnTextStyle: TextStyle(
+        fontFamily: 'Jura', fontSize: 14.sp, fontWeight: FontWeight.bold),
+    confirmBtnText: 'Retry Again',
+    cancelBtnText: 'End Call',
+    closeOnConfirmBtnTap: false,
+    confirmBtnColor: Colors.green,
+    backgroundColor: AppColors.ashLight1,
+    showCancelBtn: true,
+    onConfirmBtnTap: () {
+      Navigator.of(context).pop();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => CallScreen()),
+      );
+    },
+    onCancelBtnTap: () {
+      Navigator.of(context).pop();
+    },
+  );
 }

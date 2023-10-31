@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nears/configs/colors.dart';
+import 'package:nears/screens/widgets.dart';
 import 'package:provider/provider.dart';
 import '../configs/images.dart';
 import '../utils/app_provider.dart';
@@ -167,7 +168,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? const SetttingsPage()
                                   : Expanded(
                                       child: Container(
-                                        color: Colors.yellow,
+                                        // color: Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            title2("Page Under Construction"),
+                                            const Icon(
+                                                Icons.construction_outlined)
+                                          ],
+                                        ),
                                       ),
                                     ),
                           // Gap(40.h),
