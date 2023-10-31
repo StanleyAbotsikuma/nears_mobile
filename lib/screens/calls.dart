@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -120,7 +121,29 @@ class _CallScreenState extends State<CallScreen> {
             break;
 
           case "end_call":
-            Navigator.of(context).pop();
+            CoolAlert.show(
+              context: context,
+              type: CoolAlertType.success,
+              text: 'Case Reported',
+              textTextStyle: const TextStyle(fontFamily: 'Jura'),
+              titleTextStyle: TextStyle(
+                  fontFamily: 'Jura',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold),
+              confirmBtnTextStyle: TextStyle(
+                  fontFamily: 'Jura',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold),
+              cancelBtnTextStyle: TextStyle(
+                  fontFamily: 'Jura',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold),
+              confirmBtnText: 'Back',
+              confirmBtnColor: Colors.green,
+              onConfirmBtnTap: () {
+                Navigator.of(context).pop();
+              },
+            );
             break;
           default:
             break;
@@ -132,11 +155,57 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   void onError(dynamic error) {
-    print('WebSocket error occurred: $error');
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.error,
+      text: 'Connection Error',
+      textTextStyle: const TextStyle(fontFamily: 'Jura'),
+      titleTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      confirmBtnTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      cancelBtnTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      confirmBtnText: 'Retry Again',
+      cancelBtnText: 'End Call',
+      confirmBtnColor: Colors.green,
+      onConfirmBtnTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CallScreen()),
+        );
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   void onDone() {
-    print('WebSocket channel closed');
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.error,
+      text: 'Connection Error',
+      textTextStyle: const TextStyle(fontFamily: 'Jura'),
+      titleTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      confirmBtnTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      cancelBtnTextStyle: TextStyle(
+          fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
+      confirmBtnText: 'Retry Again',
+      cancelBtnText: 'End Call',
+      confirmBtnColor: Colors.green,
+      onConfirmBtnTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CallScreen()),
+        );
+      },
+      onCancelBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
@@ -179,44 +248,44 @@ class _CallScreenState extends State<CallScreen> {
           children: [
             Expanded(
               child: Stack(children: [
-                isVideoOn
-                    ? RTCVideoView(
-                        _localRTCVideoRenderer,
-                        objectFit:
-                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                      )
-                    : SizedBox(
-                        // decoration: BoxDecoration(image:),
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Gap(150.h),
-                            CircleAvatar(
-                                foregroundColor: Colors.transparent,
-                                backgroundColor: Colors.transparent,
-                                radius: 50,
-                                child: Padding(
-                                  padding: EdgeInsets.all(15.w),
-                                  child: Image.asset(
-                                    "assets/images/profile.png",
-                                    fit: BoxFit.contain,
-                                    width: 90.w,
-                                    height: 90.h,
-                                  ),
-                                )),
-                            Gap(10.h),
-                            SizedBox(
-                              width: double.infinity,
-                              child: title2(calltitle),
-                            ),
-                            Gap(10.h),
-                            callState == 2 ? const CallTimer() : Container(),
-                          ],
-                        ),
+                RTCVideoView(
+                  _localRTCVideoRenderer,
+                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                ),
+                Opacity(
+                    opacity: isVideoOn ? 0 : 1,
+                    child: SizedBox(
+                      // decoration: BoxDecoration(image:),
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Gap(150.h),
+                          CircleAvatar(
+                              foregroundColor: Colors.transparent,
+                              backgroundColor: Colors.transparent,
+                              radius: 50,
+                              child: Padding(
+                                padding: EdgeInsets.all(15.w),
+                                child: Image.asset(
+                                  "assets/images/profile.png",
+                                  fit: BoxFit.contain,
+                                  width: 90.w,
+                                  height: 90.h,
+                                ),
+                              )),
+                          Gap(10.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: title2(calltitle),
+                          ),
+                          Gap(10.h),
+                          callState == 2 ? const CallTimer() : Container(),
+                        ],
                       ),
+                    )),
                 SizedBox(
                     width: double.infinity,
                     height: double.infinity,
