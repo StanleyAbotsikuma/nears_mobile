@@ -232,7 +232,7 @@ Future<void> loadMessages(context) async {
   final MessagesDatabaseProvider _messagesDatabaseProvider =
       MessagesDatabaseProvider();
   _messagesDatabaseProvider.initDB();
-  _messagesDatabaseProvider.getMessages().then((value) async {
+  _messagesDatabaseProvider.getMessages1().then((value) async {
     int number = value.length;
     final accessToken = await secureStorage.read(key: "accessToken");
     try {
