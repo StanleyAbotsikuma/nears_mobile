@@ -1,8 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:nears/configs/images.dart';
-
 import '../utils/call_controller.dart';
 
 class AudioPlayerWidget extends StatefulWidget {

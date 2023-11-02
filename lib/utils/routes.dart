@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nears/screens/calls.dart';
 import 'package:nears/screens/signin.dart';
 import 'package:nears/screens/signup_info.dart';
 import 'package:nears/screens/signup_pass.dart';
@@ -8,7 +7,7 @@ import '../screens/home.dart';
 import '../screens/signup_a_info.dart';
 import '../screens/signup_verify.dart';
 import '../screens/splash_screen.dart';
-import '../tests/login.dart';
+// import '../tests/login.dart';
 
 class GenerateRoute {
   //onGenerateRoute init

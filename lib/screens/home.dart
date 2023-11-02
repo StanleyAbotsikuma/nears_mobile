@@ -1,3 +1,5 @@
+// ignore_for_file: void_checks
+
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -154,11 +156,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                // ignore: void_checks
                                 MenuButtons(AppAssets.homeIcon, () {
                                   setState(() {
                                     menuSelect = 0;
                                   });
                                 }),
+                                // ignore: void_checks
                                 MenuButtons(AppAssets.followIcon, () {
                                   setState(() {
                                     menuSelect = 1;

@@ -40,8 +40,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   void initState() {
-    phoneNumberController.text = "0276927321";
-    passwordController.text = "1234";
+    phoneNumberController.text = "";
+    passwordController.text = "";
     super.initState();
   }
 
