@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../configs/connections.dart';
 
 import 'package:geolocator/geolocator.dart';
+
+import 'broadcase_db.dart';
+import 'messages_model.dart';
 
 Future<Position> getCurrentLocation() async {
   bool serviceEnabled;
@@ -223,6 +228,78 @@ Future<Map<String, dynamic>> getAddress(
   }
 }
 
+Future<void> loadMessages(context) async {
+  final MessagesDatabaseProvider _messagesDatabaseProvider =
+      MessagesDatabaseProvider();
+  _messagesDatabaseProvider.initDB();
+  _messagesDatabaseProvider.getMessages().then((value) async {
+    int number = value.length;
+    final accessToken = await secureStorage.read(key: "accessToken");
+    try {
+      Response response = await dio.get(
+        'api/broadcastmessages/$number/',
+        // options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> responseData = response.data;
+        List<Messages1> myObjects =
+            responseData.map((json) => Messages1.fromJson(json)).toList();
+
+        Messages1 i;
+        for (i in myObjects) {
+          _messagesDatabaseProvider.addMessage(Messages(
+              id: i.id.toString(),
+              name: i.name,
+              message: i.message,
+              sender: i.sender,
+              level: i.level,
+              view: true));
+        }
+      } else {
+        if (kDebugMode) {
+          print(response);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  });
+}
+
+class Messages1 {
+  int id;
+  String name;
+  String message;
+  DateTime date;
+  String sender;
+  int level;
+  bool view;
+
+  Messages1({
+    required this.id,
+    required this.name,
+    required this.message,
+    required this.date,
+    required this.sender,
+    required this.level,
+    required this.view,
+  });
+
+  factory Messages1.fromJson(Map<String, dynamic> json) {
+    return Messages1(
+      id: json['id'],
+      name: json['name'],
+      message: json['message'],
+      date: DateTime.parse(json['date']),
+      sender: json['sender'],
+      level: json['level'],
+      view: json['view'],
+    );
+  }
+}
 //Alert Alert Alert Alert Alert Alert Alert Alert
 ////Alert Alert Alert Alert Alert Alert Alert Alert
 /////Alert Alert Alert Alert Alert Alert Alert Alert

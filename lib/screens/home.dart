@@ -33,81 +33,28 @@ class _HomeScreenState extends State<HomeScreen> {
           var data = value["message"];
           Provider.of<AppProvider>(context, listen: false)
               .setCurrentAddress(location: data["display_name"]);
-
-          CoolAlert.show(
-            context: context,
-            type: CoolAlertType.info,
-            confirmBtnColor: AppColors.ashLight1,
-            backgroundColor: AppColors.ashLight1,
-            textTextStyle: const TextStyle(fontFamily: 'Jura'),
-            titleTextStyle: TextStyle(
-                fontFamily: 'Jura',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold),
-            confirmBtnTextStyle: TextStyle(
-                fontFamily: 'Jura',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold),
-            title: 'Current Location Updated',
-            text: "Address: ${data["display_name"]}",
-            loopAnimation: false,
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('${data["display_name"]}'),
+          ));
         } else {
-          CoolAlert.show(
-            confirmBtnColor: AppColors.ashLight1,
-            backgroundColor: AppColors.ashLight1,
-            textTextStyle: const TextStyle(fontFamily: 'Jura'),
-            titleTextStyle: TextStyle(
-                fontFamily: 'Jura',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold),
-            confirmBtnTextStyle: TextStyle(
-                fontFamily: 'Jura',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold),
-            context: context,
-            type: CoolAlertType.error,
-            title: 'Location Update Error ',
-            text: "Kindly Enable your GPS Services",
-            loopAnimation: false,
-          );
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Error Location update'),
+          ));
         }
       });
 
       setState(() {});
     }).catchError((e) {
-      CoolAlert.show(
-        confirmBtnColor: AppColors.ashLight1,
-        backgroundColor: AppColors.ashLight1,
-        textTextStyle: const TextStyle(fontFamily: 'Jura'),
-        titleTextStyle: TextStyle(
-            fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-        confirmBtnTextStyle: TextStyle(
-            fontFamily: 'Jura', fontSize: 18.sp, fontWeight: FontWeight.bold),
-        context: context,
-        type: CoolAlertType.error,
-        title: 'Location Update Error ',
-        text: "Kindly Enable your GPS Services",
-        loopAnimation: false,
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Error Location update'),
+      ));
     });
   }
 
-  // final MessagesDatabaseProvider _messagesDatabaseProvider =
-  //     MessagesDatabaseProvider();
   @override
   void initState() {
     super.initState();
-    // _messagesDatabaseProvider.initDB();
-    // _messagesDatabaseProvider.addMessage(Messages(
-    //     id: "65-52",
-    //     name: "John Doe",
-    //     message:
-    //         "HThe misuse of arms is a danger to our peace and security. Say 'No' to illicit arms in Ghana.See Something, Say Something.Be Vigilant Call 999",
-    //     date: "2023-10-26T09:30:00Z",
-    //     sender: "Jane Smith",
-    //     level: 2,
-    //     view: true));
+
     try {
       updateUserLocation();
     } catch (e) {

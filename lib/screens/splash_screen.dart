@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nears/configs/images.dart';
 import '../configs/const_keys.dart';
+import '../utils/functions.dart';
 import '../utils/sharedpref.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    loadMessages(context).then((value) => Null);
     super.initState();
     check_sign_in_status();
     Timer(const Duration(seconds: 1), () {
