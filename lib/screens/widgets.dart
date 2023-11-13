@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nears/configs/colors.dart';
 import '../configs/images.dart';
 import 'calls.dart';
+import 'home.dart';
 
 Text title(String title) {
   return Text(
@@ -238,21 +239,19 @@ void errorAlert(context) {
         color: Colors.white),
     cancelBtnTextStyle: TextStyle(
         fontFamily: 'Jura', fontSize: 14.sp, fontWeight: FontWeight.bold),
-    confirmBtnText: 'Retry Again',
-    cancelBtnText: 'End Call',
+    confirmBtnText: 'End call and retry',
+    // cancelBtnText: 'End Call',
     closeOnConfirmBtnTap: false,
     confirmBtnColor: Colors.green,
     backgroundColor: AppColors.ashLight1,
-    showCancelBtn: true,
+    // showCancelBtn: true,
     onConfirmBtnTap: () {
-      Navigator.of(context).pop();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => CallScreen()),
-      );
-    },
-    onCancelBtnTap: () {
-      Navigator.of(context).pop();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (route) => false);
     },
   );
 }

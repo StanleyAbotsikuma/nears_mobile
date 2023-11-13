@@ -48,8 +48,12 @@ class _CallScreenState extends State<CallScreen> {
     }
 
     final accessToken = await secureStorage.read(key: "accessToken");
-    final wsUrl = Uri.parse(
-        "${AppConnections.wsType}${AppConnections.host}ws/emergency/?token=${accessToken!}");
+    final host = await secureStorage.read(key: "host");
+    final wsType = await secureStorage.read(key: "wsType");
+    // final wsUrl = Uri.parse(
+    //     "${AppConnections.wsType}${AppConnections.host}ws/emergency/?token=${accessToken!}");
+    final wsUrl =
+        Uri.parse("${wsType!}${host!}ws/emergency/?token=${accessToken!}");
     channel = WebSocketChannel.connect(wsUrl);
     channel!.ready.then((value) {
       channel!.sink.add(json.encode({

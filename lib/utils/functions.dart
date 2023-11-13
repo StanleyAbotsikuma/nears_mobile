@@ -40,14 +40,19 @@ Future<Position> getCurrentLocation() async {
 final Map<String, dynamic> headers = {'Content-Type': 'application/json'};
 const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-final Dio dio = Dio(BaseOptions(
-    baseUrl: AppConnections.protocolType + AppConnections.host,
-    headers: headers));
+// final Dio dio = Dio(BaseOptions(
+//     baseUrl: AppConnections.protocolType + AppConnections.host,
+//     headers: headers));
 
 //Login
 ////
 ///
 Future<Map<String, dynamic>> login(loginData) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
   try {
     Response response = await dio.post(
       'api/login/',
@@ -81,6 +86,10 @@ Future<Map<String, dynamic>> login(loginData) async {
 Future<Map<String, dynamic>> fetchData() async {
   final accessToken = await secureStorage.read(key: "accessToken");
   // print(accessToken);
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
 
   try {
     Response response = await dio.get(
@@ -105,6 +114,11 @@ Future<Map<String, dynamic>> fetchData() async {
 }
 
 Future<List<dynamic>> getUserLoad(String accessToken) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
   try {
     Response response = await dio.get(
       'data/',
@@ -130,6 +144,11 @@ bool isTokenExpired(String accessToken) {
 }
 
 Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
   try {
     Response response = await dio.post(
       'token/',
@@ -149,6 +168,11 @@ Future<Map<String, dynamic>> refreshTokens(String refreshToken) async {
 
 Future<Map<String, dynamic>> createAccount(
     createAccountData, Map<String, dynamic> createUserData) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
   try {
     Response response = await dio.post(
       'api/create_account/',
@@ -180,6 +204,11 @@ Future<Map<String, dynamic>> createAccount(
 }
 
 Future<Map<String, dynamic>> createUser(createUserData) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
   final accessToken = await secureStorage.read(key: "accessToken");
   try {
     Response response = await dio.post(
@@ -228,6 +257,13 @@ Future<Map<String, dynamic>> getAddress(
 }
 
 Future<void> loadMessages(context) async {
+  Dio dio = Dio(BaseOptions(
+      baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
+          (await secureStorage.read(key: "host")).toString(),
+      headers: headers));
+
+  final accessToken = await secureStorage.read(key: "host");
+
   final MessagesDatabaseProvider _messagesDatabaseProvider =
       MessagesDatabaseProvider();
   _messagesDatabaseProvider.initDB();

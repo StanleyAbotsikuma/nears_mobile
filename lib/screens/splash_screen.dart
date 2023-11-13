@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:nears/configs/images.dart';
 import '../configs/const_keys.dart';
 import '../utils/functions.dart';
@@ -32,8 +35,36 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  static const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  void doesValueExist() async {
+    final value = await secureStorage.read(key: "endpoint");
+
+    if (value == null) {
+      Dio dio = Dio();
+      try {
+        final response = await dio.get(
+            'https://raw.githubusercontent.com/StanleyAbotsikuma/raw_files/main/endpoints.json');
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.data);
+          print(data["protocolType"]);
+          print(data["host"]);
+          print(data["wsType"]);
+          await secureStorage.write(
+              key: "protocolType", value: data["protocolType"]);
+          await secureStorage.write(key: "host", value: data["host"]);
+          await secureStorage.write(key: "wsType", value: data["wsType"]);
+
+          await secureStorage.write(key: "endpoint", value: "true");
+        }
+      } catch (error) {
+        print(error);
+      }
+    }
+  }
+
   @override
   void initState() {
+    doesValueExist();
     loadMessages(context).then((value) => Null);
     super.initState();
     check_sign_in_status();
