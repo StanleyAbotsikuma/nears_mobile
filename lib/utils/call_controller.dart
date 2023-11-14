@@ -11,7 +11,7 @@ import 'package:nears/configs/images.dart';
 class AudioIsolate {
   late FlutterIsolate _isolate;
   SendPort? _sendPort;
-
+  @pragma('vm:entry-point')
   Future<void> initialize() async {
     BackgroundIsolateBinaryMessenger.ensureInitialized;
 
@@ -48,6 +48,7 @@ class AudioIsolate {
   }
 }
 
+@pragma('vm:entry-point')
 void _isolateEntry(SendPort sendPort) async {
   // Initialize the audio player
   AudioPlayer audioPlayer = AudioPlayer();

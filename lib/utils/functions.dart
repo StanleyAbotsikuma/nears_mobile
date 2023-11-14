@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'broadcase_db.dart';
 import 'messages_model.dart';
+import 'notifications.dart';
 
 Future<Position> getCurrentLocation() async {
   bool serviceEnabled;
@@ -256,20 +257,19 @@ Future<Map<String, dynamic>> getAddress(
   }
 }
 
-Future<void> loadMessages(context) async {
+Future<void> loadMessages() async {
   Dio dio = Dio(BaseOptions(
       baseUrl: (await secureStorage.read(key: "protocolType")).toString() +
           (await secureStorage.read(key: "host")).toString(),
       headers: headers));
 
-  final accessToken = await secureStorage.read(key: "host");
+  // final accessToken = await secureStorage.read(key: "host");
 
-  final MessagesDatabaseProvider _messagesDatabaseProvider =
+  final MessagesDatabaseProvider messagesDatabaseProvider =
       MessagesDatabaseProvider();
-  _messagesDatabaseProvider.initDB();
-  _messagesDatabaseProvider.getMessages1().then((value) async {
+  messagesDatabaseProvider.initDB();
+  messagesDatabaseProvider.getMessages1().then((value) async {
     int number = value.length;
-    final accessToken = await secureStorage.read(key: "accessToken");
     try {
       Response response = await dio.get(
         'api/broadcastmessages/$number/',
@@ -283,7 +283,12 @@ Future<void> loadMessages(context) async {
 
         Messages1 i;
         for (i in myObjects) {
-          _messagesDatabaseProvider.addMessage(Messages(
+          NotificationAPI.showNotificaiton(
+              title: "Alert",
+              body: i.message.toString(),
+              payload: "payload",
+              id: int.tryParse(i.id.toString())!);
+          messagesDatabaseProvider.addMessage(Messages(
               id: i.id.toString(),
               name: i.name,
               message: i.message,

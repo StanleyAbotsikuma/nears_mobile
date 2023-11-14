@@ -129,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: msgs.length,
                         itemBuilder: (BuildContext context, int index) {
                           Messages msg = msgs[index];
+                          // print(msg.sender);
                           return Container(
                               width: 348.w,
                               height: 76.h,
@@ -136,7 +137,15 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.only(left: 20.h),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(45),
-                                  color: const Color(0x424cffc9)),
+                                  color: msg.sender == "NEARS1"
+                                      ? const Color(0x6a9dffde)
+                                      : msg.sender == "NEARS2"
+                                          ? const Color(0x2339ffab)
+                                          : msg.sender == "NEARS3"
+                                              ? const Color(0x424cffdb)
+                                              : msg.sender == "NEARS4"
+                                                  ? const Color(0x424cffa1)
+                                                  : const Color(0x6a9dffb8)),
                               child: Row(
                                 children: [
                                   Expanded(

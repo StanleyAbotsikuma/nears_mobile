@@ -1,6 +1,5 @@
 // ignore_for_file: void_checks
 
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    loadMessages().then((value) => Null);
     super.initState();
 
     try {

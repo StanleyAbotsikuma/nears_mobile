@@ -99,16 +99,22 @@ class _SignupScreenTwoState extends State<SignupScreenTwo> {
                             ];
 
                             if (hasEmptyFields(fields)) {
-                            } else {}
-                            Provider.of<AppProvider>(context, listen: false)
-                                .setSignupAInfo(
-                                    ghanaPostGps: ghanaPostGpsController.text,
-                                    placeOfResidence:
-                                        placeOfResidenceController.text,
-                                    occupation: occupationController.text,
-                                    emailAddress: emailAddressController.text);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Please complete the form...'),
+                              ));
+                            } else {
+                              Provider.of<AppProvider>(context, listen: false)
+                                  .setSignupAInfo(
+                                      ghanaPostGps: ghanaPostGpsController.text,
+                                      placeOfResidence:
+                                          placeOfResidenceController.text,
+                                      occupation: occupationController.text,
+                                      emailAddress:
+                                          emailAddressController.text);
 
-                            Navigator.pushNamed(context, "/signup_3");
+                              Navigator.pushNamed(context, "/signup_3");
+                            }
                           }),
                           TextButton(
                             onPressed: () {

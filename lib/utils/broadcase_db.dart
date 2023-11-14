@@ -49,8 +49,12 @@ class MessagesDatabaseProvider with ChangeNotifier {
 
   Future<List<Messages>> getMessages() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps =
-        await db.query('messages', where: 'view = ?', whereArgs: [true]);
+    final List<Map<String, dynamic>> maps = await db.query(
+      'messages',
+      where: 'view = ?',
+      whereArgs: [true],
+      orderBy: 'id DESC',
+    );
     return List.generate(maps.length, (i) {
       return Messages(
           id: maps[i]['id'],

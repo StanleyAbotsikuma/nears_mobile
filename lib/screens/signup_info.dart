@@ -126,6 +126,10 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
                             ];
 
                             if (hasEmptyFields(fields)) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Please complete the form...'),
+                              ));
                             } else {
                               // Provider.of<AppProvider>(context, listen: false)
                               //     .setSignupInfo(
@@ -135,16 +139,17 @@ class _SignupScreenOneState extends State<SignupScreenOne> {
                               //         ghanaCardNumber:
                               //             ghanaCardNumberController.text,
                               //         phoneNumber: phoneNumberController.text);
+
+                              Provider.of<AppProvider>(context, listen: false)
+                                  .setSignupInfo(
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      dateOfBirth: dateOfBirthController.text,
+                                      ghanaCardNumber:
+                                          ghanaCardNumberController.text,
+                                      phoneNumber: phoneNumberController.text);
+                              Navigator.pushNamed(context, "/signup_2");
                             }
-                            Provider.of<AppProvider>(context, listen: false)
-                                .setSignupInfo(
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                    dateOfBirth: dateOfBirthController.text,
-                                    ghanaCardNumber:
-                                        ghanaCardNumberController.text,
-                                    phoneNumber: phoneNumberController.text);
-                            Navigator.pushNamed(context, "/signup_2");
                           }),
                           TextButton(
                             onPressed: () {

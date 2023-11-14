@@ -39,9 +39,8 @@ class _CallScreenState extends State<CallScreen> {
   WebSocketChannel? channel;
   // media status
   bool isAudioOn = true, isVideoOn = false, isFrontCameraSelected = true;
-
   int callState = 0;
-
+  @pragma('vm:entry-point')
   Future<void> initWebSocket() async {
     if (callState == 0) {
       updateCallState(1);
@@ -67,7 +66,7 @@ class _CallScreenState extends State<CallScreen> {
         ]
       }));
     });
-
+    setState(() {});
     channel!.stream.listen(onMessageReceived, onError: onError, onDone: onDone);
   }
 

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nears/configs/colors.dart';
 import '../configs/images.dart';
-import 'calls.dart';
 import 'home.dart';
 
 Text title(String title) {
